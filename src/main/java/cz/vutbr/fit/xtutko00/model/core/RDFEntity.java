@@ -1,5 +1,6 @@
 package cz.vutbr.fit.xtutko00.model.core;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -23,7 +24,7 @@ import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
  *
  * @author burgetr
  */
-abstract public class RDFEntity
+abstract public class RDFEntity implements Serializable
 {
     public static final ValueFactory vf = SimpleValueFactory.getInstance();
 
