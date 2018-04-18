@@ -1,17 +1,18 @@
 package cz.vutbr.fit.xtutko00;
 
-import cz.vutbr.fit.xtutko00.hbase.HBaseClientConfig;
-import cz.vutbr.fit.xtutko00.utils.XmlResourceParser;
-import io.hgraphdb.HBaseGraph;
-import io.hgraphdb.HBaseGraphConfiguration;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.apache.tinkerpop.gremlin.structure.VertexProperty;
 import org.apache.tinkerpop.gremlin.structure.util.GraphFactory;
 
-import java.util.Iterator;
-import java.util.Map;
+import cz.vutbr.fit.xtutko00.hbase.HBaseClientConfig;
+import cz.vutbr.fit.xtutko00.utils.XmlResourceParser;
+import io.hgraphdb.HBaseGraph;
+import io.hgraphdb.HBaseGraphConfiguration;
 
 /**
  * Test class for HGraphDB framework.
@@ -132,7 +133,7 @@ public class TestHGraphDb {
         HBaseGraphConfiguration cfg = new HBaseGraphConfiguration()
                 .setInstanceType(HBaseGraphConfiguration.InstanceType.DISTRIBUTED)
                 .setGraphNamespace(this.config.getTableName())
-                .setCreateTables(false);
+                .setCreateTables(true);
 
         XmlResourceParser hBaseConfigParser = new XmlResourceParser(this.config.getHBaseSiteFilename());
         Map<String, String> keyValues = hBaseConfigParser.parse();
