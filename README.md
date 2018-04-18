@@ -1,4 +1,4 @@
-# Timeline Downloader
+# Socializer
 
 ## Installation
 
@@ -35,7 +35,7 @@ Set Facebook and Twitter credentials in `configuration.xml`.
 
 ### HBase
 
-Copy content of your `hbase-site.xml` into project's `hbase-site.xml`
+Copy content of your `hbase-site.xml` into project's `hbase-site.xml`.
 
 ### Spark
 
