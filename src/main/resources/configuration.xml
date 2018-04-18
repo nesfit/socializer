@@ -1,0 +1,54 @@
+<configuration>
+
+    <!-- -->
+    <!-- Twitter app consumer key and secret (see https://apps.twitter.com/) -->
+    <!-- -->
+
+    <property>
+        <name>twitter.consumer.key</name>
+        <value>key</value>
+    </property>
+    <property>
+        <name>twitter.consumer.secret</name>
+        <value>secret</value>
+    </property>
+
+    <!-- -->
+    <!-- Facebook appId and appSecret (https://developers.facebook.com/apps) -->
+    <!-- -->
+
+    <property>
+        <name>facebook.app.id</name>
+        <value>id</value>
+    </property>
+    <property>
+        <name>facebook.app.secret</name>
+        <value>secret</value>
+    </property>
+    <!-- only posts until this date will be fetched (yyyy-mm-dd) -->
+    <!--<property>-->
+    <!--<name>facebook.date.until</name>-->
+    <!--<value>2018-01-01</value>-->
+    <!--</property>-->
+
+    <!-- -->
+    <!-- Cluster configuration -->
+    <!-- -->
+
+    <property>
+        <name>cluster.partition_num</name>
+        <value>1</value>
+    </property>
+
+    <!-- -->
+    <!-- Spark configuration -->
+    <!-- All properties started with "spark" will be added into spark configuration -->
+    <!-- -->
+
+    <!-- The cluster manager to connect to. -->
+    <!--<property>-->
+    <!--<name>spark.master</name>-->
+    <!--<value>local[*]</value>-->
+    <!--</property>-->
+
+</configuration>
