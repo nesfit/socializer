@@ -1,6 +1,6 @@
 package cz.vutbr.fit.xtutko00.model.property;
 
-import com.github.radkovo.rdf4j.builder.RDFEntity;
+import cz.vutbr.fit.xtutko00.model.core.RDFEntity;
 import cz.vutbr.fit.xtutko00.utils.IdMaker;
 import io.hgraphdb.HBaseGraph;
 import org.apache.tinkerpop.gremlin.structure.Vertex;

@@ -40,11 +40,6 @@
             <version>4.0.6</version>
         </dependency>
         <dependency>
-            <groupId>com.github.radkovo.rdf4j</groupId>
-            <artifactId>class-builder-runtime</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-model</artifactId>
             <version>2.2.4</version>

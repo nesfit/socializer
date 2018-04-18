@@ -1,17 +1,18 @@
 package cz.vutbr.fit.xtutko00.model.rdf;
 
-import com.github.radkovo.rdf4j.builder.EntityFactory;
-import cz.vutbr.fit.xtutko00.model.property.RdfPropertyEntity;
-import cz.vutbr.fit.xtutko00.model.rdf.vocabulary.TA;
-import cz.vutbr.fit.xtutko00.utils.IdMaker;
-import io.hgraphdb.HBaseGraph;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.tinkerpop.gremlin.structure.T;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 
-import java.util.HashSet;
-import java.util.Set;
+import cz.vutbr.fit.xtutko00.model.core.EntityFactory;
+import cz.vutbr.fit.xtutko00.model.property.RdfPropertyEntity;
+import cz.vutbr.fit.xtutko00.model.rdf.vocabulary.TA;
+import cz.vutbr.fit.xtutko00.utils.IdMaker;
+import io.hgraphdb.HBaseGraph;
 
 /**
  * A sequence of entries displayed in a signle time line..

@@ -1,9 +1,10 @@
 package cz.vutbr.fit.xtutko00.model.rdf;
 
-import com.github.radkovo.rdf4j.builder.EntityFactory;
 import org.eclipse.rdf4j.model.IRI;
 
-public interface TAFactory extends EntityFactory{
+import cz.vutbr.fit.xtutko00.model.core.EntityFactory;
+
+public interface TAFactory extends EntityFactory {
 	public GeoContent createGeoContent(IRI iri);
 	public Content createContent(IRI iri);
 	public TextContent createTextContent(IRI iri);

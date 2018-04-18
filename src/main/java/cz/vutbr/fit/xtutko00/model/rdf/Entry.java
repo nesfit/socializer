@@ -1,6 +1,6 @@
 package cz.vutbr.fit.xtutko00.model.rdf;
 
-import com.github.radkovo.rdf4j.builder.EntityFactory;
+import cz.vutbr.fit.xtutko00.model.core.EntityFactory;
 import cz.vutbr.fit.xtutko00.model.property.RdfPropertyEntity;
 import cz.vutbr.fit.xtutko00.model.rdf.vocabulary.TA;
 import cz.vutbr.fit.xtutko00.utils.IdMaker;

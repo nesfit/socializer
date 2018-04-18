@@ -7,11 +7,6 @@
 mvn install:install-file -Dfile=libs/halyard-common-1.4-SNAPSHOT.jar -DgroupId=com.msd.gin.halyard.common -DartifactId=halyard-common -Dversion=1.4-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
 ```
 
-### Install RDF4J Class Builder Runtime
-```
-mvn install:install-file -Dfile=libs/class-builder-runtime-0.0.1-SNAPSHOT.jar -DgroupId=com.github.radkovo.rdf4j -DartifactId=class-builder-runtime -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
-```  
-
 ## Configuration
 
 ### Credentials
