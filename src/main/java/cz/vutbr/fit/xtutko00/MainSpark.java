@@ -212,7 +212,7 @@ public class MainSpark {
         options.addOption(hBaseTableName);
 
         Option hBaseClient = new Option(ARGUMENT_HBASE_CLIENT, ARGUMENT_HBASE_CLIENT_LONG, true, "HBase client (halyard or hgraphdb)");
-        hBaseClient.setRequired(true);
+        hBaseClient.setRequired(false);
         options.addOption(hBaseClient);
 
         CommandLineParser parser = new GnuParser();
