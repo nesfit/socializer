@@ -129,9 +129,14 @@ public class SparkRunner implements Serializable {
 
         logger.info("END: Downloading timelines. Number of timelines: " + timelinesRDD.count());
 
-        logger.info("START: Saving timelines.");
+        logger.info("START: Saving timelines with Halyard.");
 
         timelinesRDD.foreach(timeline -> {
+            if (timeline == null) {
+                logger.warning("Received null timeline, probably some timeline could not be downloaded.");
+                return;
+            }
+
             logger.info("START: Saving timeline: " + timeline.getLabel() + " into Halyard.");
 
             // saving timeline to HBase
@@ -139,17 +144,28 @@ public class SparkRunner implements Serializable {
             hBaseClient.saveTimeline(timeline);
 
             logger.info("END: Saving timeline: " + timeline.getLabel() + " into Halyard.");
+        });
+
+        logger.info("END: Saving timelines with Halyard.");
+
+        logger.info("START: Saving timelines with HGraphDB.");
+
+        timelinesRDD.foreach(timeline -> {
+            if (timeline == null) {
+                logger.warning("Received null timeline, probably some timeline could not be downloaded.");
+                return;
+            }
 
             logger.info("START: Saving timeline: " + timeline.getLabel() + " into HGraphDB.");
 
             // saving timeline to HBase
-            hBaseClient = this.conf.getHBaseClientFactory().createClient(HBaseClientFactory.EClient.HGRAPHDB);
+            HBaseClient hBaseClient = this.conf.getHBaseClientFactory().createClient(HBaseClientFactory.EClient.HGRAPHDB);
             hBaseClient.saveTimeline(timeline);
 
             logger.info("END: Saving timeline: " + timeline.getLabel() + " into HGraphDB.");
         });
 
-        logger.info("END: Saving timelines.");
+        logger.info("END: Saving timelines with HGraphDB.");
 
         logger.info("END: Running spark job.");
     }
