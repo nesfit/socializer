@@ -12,6 +12,8 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
 import java.io.Serializable;
+import java.sql.Time;
+import java.util.List;
 
 /**
  * Runs Spark jobs.
@@ -131,9 +133,15 @@ public class SparkRunner implements Serializable {
 
         logger.info("END: Downloading timelines. Number of timelines: " + timelinesRDD.count());
 
+        logger.info("Start: Collecting timelines.");
+        List<Timeline> timelines = timelinesRDD.collect();
+        logger.info("End: Collecting timelines. Num of timelines " + timelines.size());
+
+        JavaRDD<Timeline> timelinesToSaveRDD = context.parallelize(timelines, conf.getNumOfPartitions());
+
         logger.info("START: Saving timelines with Halyard.");
 
-        timelinesRDD.foreach(timeline -> {
+        timelinesToSaveRDD.foreach(timeline -> {
             if (timeline == null) {
                 logger.warning("Received null timeline, probably some timeline could not be downloaded.");
                 return;
@@ -154,7 +162,7 @@ public class SparkRunner implements Serializable {
 
         logger.info("START: Saving timelines with HGraphDB.");
 
-        timelinesRDD.foreach(timeline -> {
+        timelinesToSaveRDD.foreach(timeline -> {
             if (timeline == null) {
                 logger.warning("Received null timeline, probably some timeline could not be downloaded.");
                 return;
