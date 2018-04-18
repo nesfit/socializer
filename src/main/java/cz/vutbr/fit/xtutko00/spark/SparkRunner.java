@@ -70,6 +70,8 @@ public class SparkRunner implements Serializable {
                 return;
             }
 
+            logger.info("Timeline " + timeline.getLabel() + " has " + timeline.getEntries().size() + " posts");
+
             // saving timeline to HBase
             HBaseClient hBaseClient = this.conf.getHBaseClientFactory().createClient();
             hBaseClient.saveTimeline(timeline);
@@ -138,6 +140,8 @@ public class SparkRunner implements Serializable {
             }
 
             logger.info("START: Saving timeline: " + timeline.getLabel() + " into Halyard.");
+
+            logger.info("Timeline " + timeline.getLabel() + " has " + timeline.getEntries().size() + " posts");
 
             // saving timeline to HBase
             HBaseClient hBaseClient = this.conf.getHBaseClientFactory().createClient(HBaseClientFactory.EClient.HALYARD);
