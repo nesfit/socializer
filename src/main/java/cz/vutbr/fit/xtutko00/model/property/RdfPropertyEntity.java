@@ -1,10 +1,15 @@
 package cz.vutbr.fit.xtutko00.model.property;
 
-import cz.vutbr.fit.xtutko00.model.core.RDFEntity;
-import cz.vutbr.fit.xtutko00.utils.IdMaker;
-import io.hgraphdb.HBaseGraph;
+import java.util.Collections;
+import java.util.Set;
+
+import org.apache.tinkerpop.gremlin.structure.T;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.eclipse.rdf4j.model.IRI;
+
+import cz.vutbr.fit.xtutko00.model.core.RDFEntity;
+import cz.vutbr.fit.xtutko00.utils.IdMaker;
+import io.hgraphdb.HBaseBulkLoader;
 
 public abstract class RdfPropertyEntity extends RDFEntity {
 
@@ -12,7 +17,22 @@ public abstract class RdfPropertyEntity extends RDFEntity {
         super(iri);
     }
 
-    public abstract Vertex addToGraph(HBaseGraph graph, IdMaker idMaker);
+    protected abstract Object[] getProperties(IdMaker idMaker);
+
+    public Vertex addToGraph(HBaseBulkLoader loader, IdMaker idMaker) {
+        Vertex vertex = loader.addVertex(getProperties(idMaker));
+
+        getEntities().forEach(entry -> {
+            Vertex entryVertex = entry.addToGraph(loader, idMaker);
+            loader.addEdge(vertex, entryVertex, "has", T.id, idMaker.getId());
+        });
+
+        return vertex;
+    }
+
+    protected Set<RdfPropertyEntity> getEntities() {
+        return Collections.emptySet();
+    }
 
     protected <V> void addProperty(Vertex vertex, String key, V value) {
         if (key == null || value == null) {

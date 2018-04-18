@@ -1,17 +1,19 @@
 package cz.vutbr.fit.xtutko00.hbase.hgraphdb;
 
+import java.util.Map;
+
+import org.apache.commons.configuration.Configuration;
+import org.apache.tinkerpop.gremlin.structure.util.GraphFactory;
+
 import cz.vutbr.fit.xtutko00.hbase.HBaseClient;
 import cz.vutbr.fit.xtutko00.hbase.HBaseClientConfig;
 import cz.vutbr.fit.xtutko00.model.rdf.Timeline;
 import cz.vutbr.fit.xtutko00.utils.IdMaker;
 import cz.vutbr.fit.xtutko00.utils.Logger;
 import cz.vutbr.fit.xtutko00.utils.XmlResourceParser;
+import io.hgraphdb.HBaseBulkLoader;
 import io.hgraphdb.HBaseGraph;
 import io.hgraphdb.HBaseGraphConfiguration;
-import org.apache.commons.configuration.Configuration;
-import org.apache.tinkerpop.gremlin.structure.util.GraphFactory;
-
-import java.util.Map;
 
 public class HGraphDbHBaseClient implements HBaseClient {
 
@@ -34,10 +36,12 @@ public class HGraphDbHBaseClient implements HBaseClient {
 
         logger.info("Opening HBaseGraph session.");
         HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
+        HBaseBulkLoader loader = new HBaseBulkLoader(graph);
         IdMaker idMaker = new IdMaker(timeline.getLabel());
 
-        timeline.addToGraph(graph, idMaker);
+        timeline.addToGraph(loader, idMaker);
 
+        loader.close();
         graph.close();
 
         logger.info("END: Saving timeline of " + timeline.getSourceId());

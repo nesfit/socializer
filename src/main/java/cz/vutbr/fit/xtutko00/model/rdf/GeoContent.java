@@ -1,13 +1,15 @@
 package cz.vutbr.fit.xtutko00.model.rdf;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.tinkerpop.gremlin.structure.T;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+
 import cz.vutbr.fit.xtutko00.model.core.EntityFactory;
 import cz.vutbr.fit.xtutko00.model.rdf.vocabulary.TA;
 import cz.vutbr.fit.xtutko00.utils.IdMaker;
-import io.hgraphdb.HBaseGraph;
-import org.apache.tinkerpop.gremlin.structure.T;
-import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Model;
 
 /**
  * IRI: {@code <http://nesfit.github.io/ontology/ta.owl#GeoContent>}
@@ -19,12 +21,12 @@ public class GeoContent extends Content
 	/**
 	 * IRI: {@code <http://nesfit.github.io/ontology/ta.owl#latitude>}
 	 */
-	private double latitude;
+	private Double latitude;
 
 	/**
 	 * IRI: {@code <http://nesfit.github.io/ontology/ta.owl#longitude>}
 	 */
-	private double longitude;
+	private Double longitude;
 
 
 	public GeoContent(IRI iri) {
@@ -36,7 +38,7 @@ public class GeoContent extends Content
 		return GeoContent.CLASS_IRI;
 	}
 
-	public double getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
@@ -44,7 +46,7 @@ public class GeoContent extends Content
 		this.latitude = latitude;
 	}
 
-	public double getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
@@ -68,11 +70,26 @@ public class GeoContent extends Content
 	}
 
 	@Override
-	public Vertex addToGraph(HBaseGraph graph, IdMaker idMaker) {
-		Vertex vertex = graph.addVertex(T.id, idMaker.getId(), T.label, buildLabel(getClassIRI()));
-		addProperty(vertex, "label", getLabel());
-		addProperty(vertex, "latitude", getLatitude());
-		addProperty(vertex, "longitude", getLongitude());
-		return vertex;
+	protected Object[] getProperties(IdMaker idMaker) {
+		List<Object> properties = new ArrayList<>();
+
+		properties.add(T.id);
+		properties.add(idMaker.getId());
+		properties.add(T.label);
+		properties.add(buildLabel(getClassIRI()));
+
+		if (getLabel() != null) {
+			properties.add("label");
+			properties.add(getLabel());
+		}
+		if (getLatitude() != null) {
+			properties.add("latitude");
+			properties.add(getLatitude());
+		}
+		if (getLongitude() != null) {
+			properties.add("longitude");
+			properties.add(getLongitude());
+		}
+		return properties.toArray();
 	}
 }

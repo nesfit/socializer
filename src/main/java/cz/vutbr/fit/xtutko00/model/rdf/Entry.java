@@ -1,17 +1,21 @@
 package cz.vutbr.fit.xtutko00.model.rdf;
 
-import cz.vutbr.fit.xtutko00.model.core.EntityFactory;
-import cz.vutbr.fit.xtutko00.model.property.RdfPropertyEntity;
-import cz.vutbr.fit.xtutko00.model.rdf.vocabulary.TA;
-import cz.vutbr.fit.xtutko00.utils.IdMaker;
-import io.hgraphdb.HBaseGraph;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.tinkerpop.gremlin.structure.T;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 
-import java.util.HashSet;
-import java.util.Set;
+import cz.vutbr.fit.xtutko00.model.core.EntityFactory;
+import cz.vutbr.fit.xtutko00.model.property.RdfPropertyEntity;
+import cz.vutbr.fit.xtutko00.model.rdf.vocabulary.TA;
+import cz.vutbr.fit.xtutko00.utils.IdMaker;
+import io.hgraphdb.HBaseBulkLoader;
 
 /**
  * An entry in the timeline.
@@ -123,18 +127,43 @@ public class Entry extends RdfPropertyEntity
 		timestamp = loadDateValue(m, TA.timestamp);
 	}
 
-	@Override
-	public Vertex addToGraph(HBaseGraph graph, IdMaker idMaker) {
-		Vertex vertex = graph.addVertex(T.id, idMaker.getId(), T.label, buildLabel(getClassIRI()));
-		addProperty(vertex, "label", getLabel());
-		addProperty(vertex, "sourceId", getSourceId());
-		addProperty(vertex, "timestamp", getTimestamp());
+	public Vertex addToGraph(HBaseBulkLoader loader, IdMaker idMaker) {
+		Vertex vertex = loader.addVertex(getProperties(idMaker));
 
 		getContains().forEach(content -> {
-			Vertex entryVertex = content.addToGraph(graph, idMaker);
-			vertex.addEdge("has", entryVertex, T.id, idMaker.getId());
+			Vertex entryVertex = content.addToGraph(loader, idMaker);
+			loader.addEdge(vertex, entryVertex, "has", T.id, idMaker.getId());
 		});
 
 		return vertex;
+	}
+
+	@Override
+	protected Object[] getProperties(IdMaker idMaker) {
+		List<Object> properties = new ArrayList<>();
+
+		properties.add(T.id);
+		properties.add(idMaker.getId());
+		properties.add(T.label);
+		properties.add(buildLabel(getClassIRI()));
+
+		if (getLabel() != null) {
+			properties.add("label");
+			properties.add(getLabel());
+		}
+		if (getSourceId() != null) {
+			properties.add("sourceId");
+			properties.add(getSourceId());
+		}
+		if (getTimestamp() != null) {
+			properties.add("timestamp");
+			properties.add(getTimestamp());
+		}
+		return properties.toArray();
+	}
+
+	@Override
+	protected Set<RdfPropertyEntity> getEntities() {
+		return Collections.unmodifiableSet(getContains());
 	}
 }
