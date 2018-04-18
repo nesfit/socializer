@@ -57,9 +57,9 @@ public class HalyardHBaseClient implements HBaseClient {
         }
         logger.debug("END: Parsing keyValues. Parsed " + keyValues.size() + " keyValues.");
 
-        logger.debug("START: Saving keyValues into \"" + this.config.getTableName() + "\" table.");
+        logger.debug("START: Saving keyValues into \"" + getTableName() + "\" table.");
         Configuration conf = HBaseConfiguration.create();
-        try (HTable hTable = HalyardTableUtils.getTable(conf, this.config.getTableName(), false, DEFAULT_SPLIT_BITS)) {
+        try (HTable hTable = HalyardTableUtils.getTable(conf, getTableName(), false, DEFAULT_SPLIT_BITS)) {
             keyValues.forEach(kv -> {
                 try {
                     hTable.put(new Put(kv.getRowArray(), kv.getRowOffset(), kv.getRowLength(), kv.getTimestamp()).add(kv));
@@ -71,7 +71,7 @@ public class HalyardHBaseClient implements HBaseClient {
         } catch (IOException e) {
             logger.error("Cannot save data into HBase: " + e.getMessage());
         }
-        logger.debug("END: Saving keyValues into \"" + this.config.getTableName() + "\" table.");
+        logger.debug("END: Saving keyValues into \"" + getTableName() + "\" table.");
 
         logger.info("END: Saving timeline of " + timeline.getSourceId());
     }
@@ -85,8 +85,8 @@ public class HalyardHBaseClient implements HBaseClient {
 
         Configuration conf = HBaseConfiguration.create();
         try {
-            logger.info("Creating HBase table " + config.getTableName());
-            HalyardTableUtils.getTable(conf, this.config.getTableName(), true, DEFAULT_SPLIT_BITS);
+            logger.info("Creating HBase table " + getTableName());
+            HalyardTableUtils.getTable(conf, getTableName(), true, DEFAULT_SPLIT_BITS);
         } catch (IOException e) {
             logger.error("Cannot create HBase table: " + e.getMessage());
             e.printStackTrace();
@@ -135,5 +135,9 @@ public class HalyardHBaseClient implements HBaseClient {
         }
 
         return true;
+    }
+
+    private String getTableName() {
+        return config.getTableName() + "_halyard";
     }
 }

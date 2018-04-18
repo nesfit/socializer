@@ -53,7 +53,7 @@ public class HGraphDbHBaseClient implements HBaseClient {
             return;
         }
 
-        logger.info("Creating HBase table " + config.getTableName());
+        logger.info("Creating HBase table " + getTableName());
         ((HBaseGraph) GraphFactory.open(getHBaseConfiguration(true))).close();
     }
 
@@ -76,7 +76,7 @@ public class HGraphDbHBaseClient implements HBaseClient {
     private Configuration getHBaseConfiguration(boolean createTable) {
         HBaseGraphConfiguration cfg = new HBaseGraphConfiguration()
                 .setInstanceType(HBaseGraphConfiguration.InstanceType.DISTRIBUTED)
-                .setGraphNamespace(this.config.getTableName())
+                .setGraphNamespace(getTableName())
                 .setCreateTables(createTable)
                 .setRegionCount(1);
 
@@ -85,6 +85,10 @@ public class HGraphDbHBaseClient implements HBaseClient {
         keyValues.forEach(cfg::set);
 
         return cfg;
+    }
+
+    private String getTableName() {
+        return config.getTableName() + "_hgraphdb";
     }
 
 }
