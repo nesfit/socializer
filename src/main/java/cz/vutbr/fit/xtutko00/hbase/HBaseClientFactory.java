@@ -15,7 +15,11 @@ public class HBaseClientFactory implements Serializable {
         this.config = config;
     }
 
-    public HBaseClient getInstance() {
+    public HBaseClientFactory(HBaseClientConfig config) {
+        this.config = config;
+    }
+
+    public HBaseClient createClient() {
         switch (client) {
             case HALYARD:
                 return new HalyardHBaseClient(config);
@@ -24,6 +28,11 @@ public class HBaseClientFactory implements Serializable {
             default:
                 return null;
         }
+    }
+
+    public HBaseClient createClient(EClient client) {
+        this.client = client;
+        return createClient();
     }
 
     public enum EClient {

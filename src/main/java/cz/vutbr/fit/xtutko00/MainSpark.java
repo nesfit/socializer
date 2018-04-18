@@ -74,11 +74,7 @@ public class MainSpark {
             return;
         }
 
-        String hBaseClient = cmd.getOptionValue(ARGUMENT_HBASE_CLIENT);
-        if (StringUtils.isBlank(hBaseClient)) {
-            logger.error("HBase client not set.");
-            return;
-        }
+        boolean hBaseClientSet = cmd.hasOption(ARGUMENT_HBASE_CLIENT);
 
         // --------------------------------------------------------
 
@@ -104,16 +100,20 @@ public class MainSpark {
 
         // HBaseClient factory.
         HBaseClientFactory hBaseClientFactory;
-        switch (hBaseClient) {
-            case "halyard":
-                hBaseClientFactory = new HBaseClientFactory(HBaseClientFactory.EClient.HALYARD, hBaseClientConfig);
-                break;
-            case "hgraphdb":
-                hBaseClientFactory = new HBaseClientFactory(HBaseClientFactory.EClient.HGRAPHDB, hBaseClientConfig);
-                break;
-            default:
-                logger.error("HBase client not recognized. Please use halyard or hgraphdb.");
-                return;
+        if (hBaseClientSet) {
+            switch (cmd.getOptionValue(ARGUMENT_HBASE_CLIENT)) {
+                case "halyard":
+                    hBaseClientFactory = new HBaseClientFactory(HBaseClientFactory.EClient.HALYARD, hBaseClientConfig);
+                    break;
+                case "hgraphdb":
+                    hBaseClientFactory = new HBaseClientFactory(HBaseClientFactory.EClient.HGRAPHDB, hBaseClientConfig);
+                    break;
+                default:
+                    logger.error("HBase client not recognized. Please use halyard or hgraphdb.");
+                    return;
+            }
+        } else {
+            hBaseClientFactory = new HBaseClientFactory(hBaseClientConfig);
         }
 
         String numOfPartitionsStr = properties.get(RESOURCE_NUM_OF_PARTITIONS);
@@ -145,7 +145,12 @@ public class MainSpark {
 
         // Submitting Spark job.
         SparkRunner sparkRunner = new SparkRunner(conf);
-        sparkRunner.downloadTimelines();
+
+        if (hBaseClientSet) {
+            sparkRunner.downloadTimelines();
+        } else {
+            sparkRunner.compareHBaseClients();
+        }
     }
 
     /**

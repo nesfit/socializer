@@ -1,6 +1,7 @@
 package cz.vutbr.fit.xtutko00.spark;
 
 import cz.vutbr.fit.xtutko00.hbase.HBaseClient;
+import cz.vutbr.fit.xtutko00.hbase.HBaseClientFactory;
 import cz.vutbr.fit.xtutko00.model.rdf.Timeline;
 import cz.vutbr.fit.xtutko00.source.Source;
 import cz.vutbr.fit.xtutko00.source.SourceClient;
@@ -37,7 +38,7 @@ public class SparkRunner implements Serializable {
         }
 
         logger.info("Creating HBase table.");
-        conf.getHBaseClientFactory().getInstance().createTable();
+        conf.getHBaseClientFactory().createClient().createTable();
 
         SourceClientFactory sourceClientFactory = conf.getSourceClientFactory();
 
@@ -70,11 +71,85 @@ public class SparkRunner implements Serializable {
             }
 
             // saving timeline to HBase
-            HBaseClient hBaseClient = this.conf.getHBaseClientFactory().getInstance();
+            HBaseClient hBaseClient = this.conf.getHBaseClientFactory().createClient();
             hBaseClient.saveTimeline(timeline);
 
             logger.info("END: Processing source: " + source.getType() + ":" + source.getName());
         });
+
+        logger.info("END: Running spark job.");
+    }
+
+    public void compareHBaseClients() {
+        if (!isConfigurationOk()) {
+            logger.error("Wrong configuration.");
+            return;
+        }
+
+        logger.info("Creating HBase table.");
+        conf.getHBaseClientFactory().createClient(HBaseClientFactory.EClient.HALYARD).createTable();
+        conf.getHBaseClientFactory().createClient(HBaseClientFactory.EClient.HGRAPHDB).createTable();
+
+        SourceClientFactory sourceClientFactory = conf.getSourceClientFactory();
+
+        // Spark configuration
+        SparkConf sparkConf = buildSparkConf();
+        sparkConf.validateSettings();
+
+        // Paralleling sources
+        JavaSparkContext context = new JavaSparkContext(sparkConf);
+        JavaRDD<Source> sourcesRDD = context.parallelize(conf.getSources(),conf.getNumOfPartitions());
+
+        logger.info("START: Running spark job on " + sourcesRDD.getNumPartitions() + " partitions.");
+
+        logger.info("START: Downloading timelines.");
+
+        JavaRDD<Timeline> timelinesRDD = sourcesRDD.map(source -> {
+
+            logger.info("START: Processing source: " + source.getType() + ":" + source.getName());
+
+            // connecting to FB/Twitter
+            SourceClient sourceClient = sourceClientFactory.createSourceClient(source.getType());
+            if (sourceClient == null) {
+                logger.error("Cannot create TimelineSource for source " + source.getName());
+                return null;
+            }
+
+            // downloading timeline
+            Timeline timeline = sourceClient.getTimeline(source.getName());
+            if (timeline == null) {
+                logger.error("Could not download timeline of source " + source.getName());
+                return null;
+            }
+
+            logger.info("END: Processing source: " + source.getType() + ":" + source.getName());
+
+            return timeline;
+        });
+
+        logger.info("END: Downloading timelines. Number of timelines: " + timelinesRDD.count());
+
+        logger.info("START: Saving timelines.");
+
+        timelinesRDD.foreach(timeline -> {
+            logger.info("START: Saving timeline: " + timeline.getLabel() + " into Halyard.");
+
+            // saving timeline to HBase
+            HBaseClient hBaseClient = this.conf.getHBaseClientFactory().createClient(HBaseClientFactory.EClient.HALYARD);
+            hBaseClient.saveTimeline(timeline);
+
+            logger.info("END: Saving timeline: " + timeline.getLabel() + " into Halyard.");
+
+            logger.info("START: Saving timeline: " + timeline.getLabel() + " into HGraphDB.");
+
+            // saving timeline to HBase
+            hBaseClient = this.conf.getHBaseClientFactory().createClient(HBaseClientFactory.EClient.HGRAPHDB);
+            hBaseClient.saveTimeline(timeline);
+
+            logger.info("END: Saving timeline: " + timeline.getLabel() + " into HGraphDB.");
+        });
+
+        logger.info("END: Saving timelines.");
 
         logger.info("END: Running spark job.");
     }
