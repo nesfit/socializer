@@ -51,13 +51,6 @@ public class TextContent extends Content
 	}
 
 	@Override
-	public void loadFromModel(Model model, EntityFactory efactory) {
-		super.loadFromModel(model, efactory);
-		final Model m = model.filter(getIRI(), null, null);
-		text = loadStringValue(m, TA.text);
-	}
-
-	@Override
 	protected Object[] getProperties(IdMaker idMaker) {
 		List<Object> properties = new ArrayList<>();
 

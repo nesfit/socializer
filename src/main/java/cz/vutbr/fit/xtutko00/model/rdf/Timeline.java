@@ -70,17 +70,6 @@ public class Timeline extends RdfPropertyEntity
 	}
 
 	@Override
-	public void loadFromModel(Model model, EntityFactory efactory) {
-		super.loadFromModel(model, efactory);
-		if (!(efactory instanceof TAFactory))
-			throw new IllegalArgumentException("factory must be instance of TAFactory");
-		final TAFactory factory = (TAFactory) efactory;
-
-		final Model m = model.filter(getIRI(), null, null);
-		sourceId = loadStringValue(m, TA.sourceId);
-	}
-
-	@Override
 	protected Object[] getProperties(IdMaker idMaker) {
 		List<Object> properties = new ArrayList<>();
 

@@ -53,7 +53,7 @@ public class Entry extends RdfPropertyEntity
 
 	public Entry(IRI iri) {
 		super(iri);
-		contains = new HashSet<Content>();
+		contains = new HashSet<>();
 	}
 
 	@Override
@@ -96,46 +96,6 @@ public class Entry extends RdfPropertyEntity
 		addCollectionWithData(model, TA.contains, contains);
 		addValue(model, TA.sourceId, sourceId);
 		addValue(model, TA.timestamp, timestamp);
-	}
-
-	@Override
-	public void loadFromModel(Model model, EntityFactory efactory) {
-		super.loadFromModel(model, efactory);
-		if (!(efactory instanceof TAFactory))
-			throw new IllegalArgumentException("factory must be instance of TAFactory");
-		final TAFactory factory = (TAFactory) efactory;
-
-		final Model m = model.filter(getIRI(), null, null);
-		//load object sourceTimeline
-		final Set<IRI> sourceTimelineIRIs = getObjectIRIs(m, TA.sourceTimeline);
-		if (!sourceTimelineIRIs.isEmpty()) {
-			final IRI iri = sourceTimelineIRIs.iterator().next();
-			sourceTimeline = factory.createTimeline(iri);
-			sourceTimeline.loadFromModel(m, factory);
-		} else {
-			sourceTimeline = null;
-		}
-		//load collection contains
-		final Set<IRI> containsIRIs = getObjectIRIs(m, TA.contains);
-		contains = new HashSet<>();
-		for (IRI iri : containsIRIs) {
-			Content item = factory.createContent(iri);
-			item.loadFromModel(m, factory);
-			contains.add(item);
-		}
-		sourceId = loadStringValue(m, TA.sourceId);
-		timestamp = loadDateValue(m, TA.timestamp);
-	}
-
-	public Vertex addToGraph(HBaseBulkLoader loader, IdMaker idMaker) {
-		Vertex vertex = loader.addVertex(getProperties(idMaker));
-
-		getContains().forEach(content -> {
-			Vertex entryVertex = content.addToGraph(loader, idMaker);
-			loader.addEdge(vertex, entryVertex, "has", T.id, idMaker.getId());
-		});
-
-		return vertex;
 	}
 
 	@Override

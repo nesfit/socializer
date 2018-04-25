@@ -34,13 +34,6 @@ public abstract class RdfPropertyEntity extends RDFEntity {
         return Collections.emptySet();
     }
 
-    protected <V> void addProperty(Vertex vertex, String key, V value) {
-        if (key == null || value == null) {
-            return;
-        }
-        vertex.property(key, value);
-    }
-
     protected String buildLabel(IRI iri) {
         return iri.getNamespace() + iri.getLocalName();
     }

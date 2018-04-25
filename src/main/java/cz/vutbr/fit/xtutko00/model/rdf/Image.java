@@ -52,13 +52,6 @@ public class Image extends Content
 	}
 
 	@Override
-	public void loadFromModel(Model model, EntityFactory efactory) {
-		super.loadFromModel(model, efactory);
-		final Model m = model.filter(getIRI(), null, null);
-		sourceUrl = loadStringValue(m, TA.sourceUrl);
-	}
-
-	@Override
 	protected Object[] getProperties(IdMaker idMaker) {
 		List<Object> properties = new ArrayList<>();
 

@@ -37,12 +37,6 @@ public class Content extends RdfPropertyEntity
 	}
 
 	@Override
-	public void loadFromModel(Model model, EntityFactory efactory) {
-		super.loadFromModel(model, efactory);
-		final Model m = model.filter(getIRI(), null, null);
-	}
-
-	@Override
 	protected Object[] getProperties(IdMaker idMaker) {
 		List<Object> properties = new ArrayList<>();
 
