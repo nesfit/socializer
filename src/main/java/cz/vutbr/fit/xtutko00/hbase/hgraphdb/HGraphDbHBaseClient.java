@@ -77,8 +77,7 @@ public class HGraphDbHBaseClient implements HBaseClient {
         HBaseGraphConfiguration cfg = new HBaseGraphConfiguration()
                 .setInstanceType(HBaseGraphConfiguration.InstanceType.DISTRIBUTED)
                 .setGraphNamespace(getTableName())
-                .setCreateTables(createTable)
-                .setRegionCount(1);
+                .setCreateTables(createTable);
 
         XmlResourceParser hBaseConfigParser = new XmlResourceParser(this.config.getHBaseSiteFilename());
         Map<String, String> keyValues = hBaseConfigParser.parse();

@@ -63,6 +63,14 @@ Build jar with dependencies.
 mvn clean compile assembly:single
 ```
 
+### Creating tables
+
+Sometimes, there it is not possible to create required tables via `spark-submit` job. 
+If you are not able to create the table (`spark-submit` job freeze on start), use this builder:
+```$xslt
+java -cp socializer-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.TableBuilder [halyard/hgraphdb] [table_name]
+```
+
 ### Downloading data
 
 Submit built jar into Spark cluster with `spark-submit`.
