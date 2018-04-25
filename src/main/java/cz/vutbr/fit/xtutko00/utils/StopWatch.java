@@ -21,4 +21,8 @@ public class StopWatch {
         float elapsedTimeSec = elapsedTimeMillis/1000F;
         return (long) elapsedTimeSec;
     }
+
+    public Long getTimeMillis() {
+        return stopTime - startTime;
+    }
 }

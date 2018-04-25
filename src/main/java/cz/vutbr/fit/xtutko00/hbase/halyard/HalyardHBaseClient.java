@@ -105,8 +105,8 @@ public class HalyardHBaseClient implements HBaseClient {
         }
     }
 
-    public void testLongestEntryText(String serverUrl, String repositoyName) {
-        try (RepositoryConnection con = createDbConnection(serverUrl, repositoyName)) {
+    public void testLongestEntryText(String serverUrl, String repositoryName) {
+        try (RepositoryConnection con = createDbConnection(serverUrl, repositoryName)) {
             String queryString = "select distinct ?entry ?sourceId ?textlen where { " +
                     "  ?entry <http://nesfit.github.io/ontology/ta.owl#sourceId> ?sourceId . " +
                     "  ?entry <http://nesfit.github.io/ontology/ta.owl#contains> ?content . " +
@@ -139,6 +139,38 @@ public class HalyardHBaseClient implements HBaseClient {
             logger.info("Query evaluated in " + stopWatch.getTimeSec() + " seconds.");
         }
     }
+
+    public void testEntryTimestamps(String serverUrl, String repositoryName, String timelineLabel) {
+        try (RepositoryConnection con = createDbConnection(serverUrl, repositoryName)) {
+            String queryString = "SELECT ?sourceId ?timestamp " +
+                    "WHERE { " +
+                    "  ?timeline <http://www.w3.org/2000/01/rdf-schema#label> '" + timelineLabel + "' . " +
+                    "  ?entry <http://nesfit.github.io/ontology/ta.owl#sourceTimeline> ?timeline . " +
+                    "  ?entry <http://nesfit.github.io/ontology/ta.owl#timestamp> ?timestamp . " +
+                    "  ?entry <http://nesfit.github.io/ontology/ta.owl#sourceId> ?sourceId " +
+                    "  FILTER ( ?timestamp >= xsd:dateTime('2018-01-01T00:00:00.00Z') ) " +
+                    "} ORDER BY DESC(?timestamp)";
+
+            StopWatch stopWatch = new StopWatch();
+
+            TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
+
+            stopWatch.start();
+            try (TupleQueryResult result = tupleQuery.evaluate()) {
+                while (result.hasNext()) {
+                    BindingSet bindingSet = result.next();
+                    Value sourceId = bindingSet.getValue("sourceId");
+                    Value timestamp = bindingSet.getValue("timestamp");
+
+                    System.out.println("Entry sourceId: " + sourceId.stringValue() + " timestamp: " + timestamp.stringValue());
+                }
+            }
+            stopWatch.stop();
+
+            logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        }
+    }
+
 
     private RepositoryConnection createDbConnection(String serverUrl, String repositoryName) {
         Repository repo = new HTTPRepository(serverUrl, repositoryName);
