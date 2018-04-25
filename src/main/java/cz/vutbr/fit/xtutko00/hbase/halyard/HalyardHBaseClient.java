@@ -5,6 +5,8 @@ import cz.vutbr.fit.xtutko00.hbase.HBaseClient;
 import cz.vutbr.fit.xtutko00.hbase.HBaseClientConfig;
 import cz.vutbr.fit.xtutko00.model.rdf.Timeline;
 import cz.vutbr.fit.xtutko00.utils.Logger;
+import cz.vutbr.fit.xtutko00.utils.StopWatch;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -13,7 +15,15 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.http.HTTPRepository;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -27,6 +37,8 @@ public class HalyardHBaseClient implements HBaseClient {
     private static final int DEFAULT_SPLIT_BITS = 3;
 
     private HBaseClientConfig config;
+
+    public HalyardHBaseClient() {}
 
     public HalyardHBaseClient(HBaseClientConfig config) {
         this.config = config;
@@ -91,6 +103,47 @@ public class HalyardHBaseClient implements HBaseClient {
             logger.error("Cannot create HBase table: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void testLongestEntryText(String serverUrl, String repositoyName) {
+        try (RepositoryConnection con = createDbConnection(serverUrl, repositoyName)) {
+            String queryString = "select distinct ?entry ?sourceId ?textlen where { " +
+                    "  ?entry <http://nesfit.github.io/ontology/ta.owl#sourceId> ?sourceId . " +
+                    "  ?entry <http://nesfit.github.io/ontology/ta.owl#contains> ?content . " +
+                    "  ?content <http://nesfit.github.io/ontology/ta.owl#text> ?text .\n" +
+                    "  BIND (strlen(?text) AS ?textlen) " +
+                    "} " +
+                    "order by desc (strlen(str(?text))) " +
+                    "limit 1";
+
+            StopWatch stopWatch = new StopWatch();
+
+            TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
+
+            stopWatch.start();
+            try (TupleQueryResult result = tupleQuery.evaluate()) {
+                while (result.hasNext()) {  // iterate over the result
+                    BindingSet bindingSet = result.next();
+                    Value entry = bindingSet.getValue("entry");
+                    Value sourceId = bindingSet.getValue("sourceId");
+                    Value textLen = bindingSet.getValue("textlen");
+
+                    System.out.println("Result:");
+                    System.out.println("entry: " + entry.stringValue());
+                    System.out.println("sourceId: " + sourceId.stringValue());
+                    System.out.println("textLen: " + textLen.stringValue());
+                }
+            }
+            stopWatch.stop();
+
+            logger.info("Query evaluated in " + stopWatch.getTimeSec() + " seconds.");
+        }
+    }
+
+    private RepositoryConnection createDbConnection(String serverUrl, String repositoryName) {
+        Repository repo = new HTTPRepository(serverUrl, repositoryName);
+        repo.initialize();
+        return repo.getConnection();
     }
 
     private Set<Statement> getStatements(Timeline timeline) {
