@@ -140,11 +140,11 @@ public class HalyardHBaseClient implements HBaseClient {
         }
     }
 
-    public void testEntryTimestamps(String serverUrl, String repositoryName, String timelineLabel) {
+    public void testEntryTimestamps(String serverUrl, String repositoryName) {
         try (RepositoryConnection con = createDbConnection(serverUrl, repositoryName)) {
-            String queryString = "SELECT ?sourceId ?timestamp " +
+            String queryString = "SELECT ?label ?sourceId ?timestamp " +
                     "WHERE { " +
-                    "  ?timeline <http://www.w3.org/2000/01/rdf-schema#label> '" + timelineLabel + "' . " +
+                    "  ?timeline <http://www.w3.org/2000/01/rdf-schema#label> ?label . " +
                     "  ?entry <http://nesfit.github.io/ontology/ta.owl#sourceTimeline> ?timeline . " +
                     "  ?entry <http://nesfit.github.io/ontology/ta.owl#timestamp> ?timestamp . " +
                     "  ?entry <http://nesfit.github.io/ontology/ta.owl#sourceId> ?sourceId " +
@@ -161,8 +161,9 @@ public class HalyardHBaseClient implements HBaseClient {
                     BindingSet bindingSet = result.next();
                     Value sourceId = bindingSet.getValue("sourceId");
                     Value timestamp = bindingSet.getValue("timestamp");
+                    Value label = bindingSet.getValue("label");
 
-                    System.out.println("Entry sourceId: " + sourceId.stringValue() + " timestamp: " + timestamp.stringValue());
+                    System.out.println("Timeline label: " + label.stringValue() + " Entry sourceId: " + sourceId.stringValue() + " timestamp: " + timestamp.stringValue());
                 }
             }
             stopWatch.stop();
@@ -171,6 +172,33 @@ public class HalyardHBaseClient implements HBaseClient {
         }
     }
 
+    public void testNumberOfEntries(String serverUrl, String repositoryName) {
+        try (RepositoryConnection con = createDbConnection(serverUrl, repositoryName)) {
+            String queryString = "SELECT ?label (COUNT(?entry) as ?numberOfEntries) " +
+                    "WHERE{ " +
+                    "  ?timeline <http://www.w3.org/2000/01/rdf-schema#label> ?label . " +
+                    "  ?entry <http://nesfit.github.io/ontology/ta.owl#sourceTimeline> ?timeline . " +
+                    "} GROUP BY ?label";
+
+            StopWatch stopWatch = new StopWatch();
+
+            TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
+
+            stopWatch.start();
+            try (TupleQueryResult result = tupleQuery.evaluate()) {
+                while (result.hasNext()) {
+                    BindingSet bindingSet = result.next();
+                    Value label = bindingSet.getValue("label");
+                    Value numberOfEntries = bindingSet.getValue("numberOfEntries");
+
+                    System.out.println("Timeline label: " + label.stringValue() + " count: " + numberOfEntries.stringValue());
+                }
+            }
+            stopWatch.stop();
+
+            logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        }
+    }
 
     private RepositoryConnection createDbConnection(String serverUrl, String repositoryName) {
         Repository repo = new HTTPRepository(serverUrl, repositoryName);
