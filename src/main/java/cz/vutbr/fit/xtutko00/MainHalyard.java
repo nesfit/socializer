@@ -11,6 +11,7 @@ public class MainHalyard {
     private static final String TEST_TIMESTAMPS = "timestamps";
     private static final String TEST_TIMESTAMPS_SORT = "timestampsSort";
     private static final String TEST_NUMBER_OF_ENTRIES = "numberOfEntries";
+    private static final String TEST_SHARED_URLS = "sharedUrls";
 
     public static void main(String[] args) {
         if (args.length < 3) {
@@ -25,6 +26,7 @@ public class MainHalyard {
 
         HalyardHBaseClient halyardHBaseClient = new HalyardHBaseClient();
 
+        logger.info("Running test " + testName);
         switch (testName) {
             case TEST_LONGEST_NAME:
                 halyardHBaseClient.testLongestEntryText(serverUrl, repositoryName);
@@ -37,6 +39,9 @@ public class MainHalyard {
                 break;
             case TEST_NUMBER_OF_ENTRIES:
                 halyardHBaseClient.testNumberOfEntries(serverUrl, repositoryName);
+                break;
+            case TEST_SHARED_URLS:
+                halyardHBaseClient.testSharedUrls(serverUrl, repositoryName);
                 break;
             default:
                 System.out.println("ERROR: Test name not recognized.");
@@ -52,5 +57,6 @@ public class MainHalyard {
         System.out.println(TEST_TIMESTAMPS + " - get entries and theirs timestamps");
         System.out.println(TEST_TIMESTAMPS_SORT + " - get entries and theirs timestamps and sort newest first");
         System.out.println(TEST_NUMBER_OF_ENTRIES + " - get timelines labels with number of entries");
+        System.out.println(TEST_SHARED_URLS + " - get number of occurrences of url");
     }
 }

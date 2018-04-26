@@ -232,6 +232,37 @@ public class HalyardHBaseClient implements HBaseClient {
         }
     }
 
+    public void testSharedUrls(String serverUrl, String repositoryName) {
+        try (RepositoryConnection con = createDbConnection(serverUrl, repositoryName)) {
+            String queryString = "SELECT ?sourceUrl (COUNT(?content) as ?numberOfContents) " +
+                    "WHERE { " +
+                    "  ?content <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  <http://nesfit.github.io/ontology/ta.owl#URLContent> . " +
+                    "  ?content <http://nesfit.github.io/ontology/ta.owl#sourceUrl> ?sourceUrl " +
+                    "} " +
+                    "GROUP BY ?sourceUrl " +
+                    "HAVING (?numberOfContents > 1) " +
+                    "ORDER BY DESC(?numberOfContents) ";
+
+            StopWatch stopWatch = new StopWatch();
+
+            TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
+
+            stopWatch.start();
+            try (TupleQueryResult result = tupleQuery.evaluate()) {
+                while (result.hasNext()) {
+                    BindingSet bindingSet = result.next();
+                    Value sourceUrl = bindingSet.getValue("sourceUrl");
+                    Value numberOfContents = bindingSet.getValue("numberOfContents");
+
+                    System.out.println("SourceUrl: " + sourceUrl.stringValue() + " count: " + numberOfContents.stringValue());
+                }
+            }
+            stopWatch.stop();
+
+            logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        }
+    }
+
     private RepositoryConnection createDbConnection(String serverUrl, String repositoryName) {
         Repository repo = new HTTPRepository(serverUrl, repositoryName);
         repo.initialize();
