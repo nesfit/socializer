@@ -149,6 +149,38 @@ public class HalyardHBaseClient implements HBaseClient {
                     "  ?entry <http://nesfit.github.io/ontology/ta.owl#timestamp> ?timestamp . " +
                     "  ?entry <http://nesfit.github.io/ontology/ta.owl#sourceId> ?sourceId " +
                     "  FILTER ( ?timestamp >= xsd:dateTime('2018-01-01T00:00:00.00Z') ) " +
+                    "}";
+
+            StopWatch stopWatch = new StopWatch();
+
+            TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
+
+            stopWatch.start();
+            try (TupleQueryResult result = tupleQuery.evaluate()) {
+                while (result.hasNext()) {
+                    BindingSet bindingSet = result.next();
+                    Value sourceId = bindingSet.getValue("sourceId");
+                    Value timestamp = bindingSet.getValue("timestamp");
+                    Value label = bindingSet.getValue("label");
+
+                    System.out.println("Timeline label: " + label.stringValue() + " Entry sourceId: " + sourceId.stringValue() + " timestamp: " + timestamp.stringValue());
+                }
+            }
+            stopWatch.stop();
+
+            logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        }
+    }
+
+    public void testEntryTimestampsWithSort(String serverUrl, String repositoryName) {
+        try (RepositoryConnection con = createDbConnection(serverUrl, repositoryName)) {
+            String queryString = "SELECT ?label ?sourceId ?timestamp " +
+                    "WHERE { " +
+                    "  ?timeline <http://www.w3.org/2000/01/rdf-schema#label> ?label . " +
+                    "  ?entry <http://nesfit.github.io/ontology/ta.owl#sourceTimeline> ?timeline . " +
+                    "  ?entry <http://nesfit.github.io/ontology/ta.owl#timestamp> ?timestamp . " +
+                    "  ?entry <http://nesfit.github.io/ontology/ta.owl#sourceId> ?sourceId " +
+                    "  FILTER ( ?timestamp >= xsd:dateTime('2018-01-01T00:00:00.00Z') ) " +
                     "} ORDER BY DESC(?timestamp)";
 
             StopWatch stopWatch = new StopWatch();
