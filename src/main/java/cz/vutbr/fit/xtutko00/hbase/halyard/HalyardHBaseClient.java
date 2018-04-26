@@ -116,12 +116,15 @@ public class HalyardHBaseClient implements HBaseClient {
                     "order by desc (strlen(str(?text))) " +
                     "limit 1";
 
-            StopWatch stopWatch = new StopWatch();
+            StopWatch stopWatchPrinted = new StopWatch();
+            StopWatch stopWatchEvaluate = new StopWatch();
 
             TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
 
-            stopWatch.start();
+            stopWatchPrinted.start();
+            stopWatchEvaluate.start();
             try (TupleQueryResult result = tupleQuery.evaluate()) {
+                stopWatchEvaluate.stop();
                 while (result.hasNext()) {  // iterate over the result
                     BindingSet bindingSet = result.next();
                     Value entry = bindingSet.getValue("entry");
@@ -134,9 +137,10 @@ public class HalyardHBaseClient implements HBaseClient {
                     System.out.println("textLen: " + textLen.stringValue());
                 }
             }
-            stopWatch.stop();
+            stopWatchPrinted.stop();
 
-            logger.info("Query evaluated in " + stopWatch.getTimeSec() + " seconds.");
+            logger.info("Query evaluated in " + stopWatchEvaluate.getTimeSec() + " milliseconds.");
+            logger.info("Query printed in " + stopWatchPrinted.getTimeSec() + " milliseconds.");
         }
     }
 
@@ -151,12 +155,15 @@ public class HalyardHBaseClient implements HBaseClient {
                     "  FILTER ( ?timestamp >= xsd:dateTime('2018-01-01T00:00:00.00Z') ) " +
                     "}";
 
-            StopWatch stopWatch = new StopWatch();
+            StopWatch stopWatchPrinted = new StopWatch();
+            StopWatch stopWatchEvaluate = new StopWatch();
 
             TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
 
-            stopWatch.start();
+            stopWatchPrinted.start();
+            stopWatchEvaluate.start();
             try (TupleQueryResult result = tupleQuery.evaluate()) {
+                stopWatchEvaluate.stop();
                 while (result.hasNext()) {
                     BindingSet bindingSet = result.next();
                     Value sourceId = bindingSet.getValue("sourceId");
@@ -166,9 +173,10 @@ public class HalyardHBaseClient implements HBaseClient {
                     System.out.println("Timeline label: " + label.stringValue() + " Entry sourceId: " + sourceId.stringValue() + " timestamp: " + timestamp.stringValue());
                 }
             }
-            stopWatch.stop();
+            stopWatchPrinted.stop();
 
-            logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+            logger.info("Query evaluated in " + stopWatchEvaluate.getTimeMillis() + " milliseconds.");
+            logger.info("Query printed in " + stopWatchPrinted.getTimeMillis() + " milliseconds.");
         }
     }
 
@@ -183,12 +191,15 @@ public class HalyardHBaseClient implements HBaseClient {
                     "  FILTER ( ?timestamp >= xsd:dateTime('2018-01-01T00:00:00.00Z') ) " +
                     "} ORDER BY DESC(?timestamp)";
 
-            StopWatch stopWatch = new StopWatch();
+            StopWatch stopWatchPrinted = new StopWatch();
+            StopWatch stopWatchEvaluate = new StopWatch();
 
             TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
 
-            stopWatch.start();
+            stopWatchPrinted.start();
+            stopWatchEvaluate.start();
             try (TupleQueryResult result = tupleQuery.evaluate()) {
+                stopWatchEvaluate.stop();
                 while (result.hasNext()) {
                     BindingSet bindingSet = result.next();
                     Value sourceId = bindingSet.getValue("sourceId");
@@ -198,9 +209,10 @@ public class HalyardHBaseClient implements HBaseClient {
                     System.out.println("Timeline label: " + label.stringValue() + " Entry sourceId: " + sourceId.stringValue() + " timestamp: " + timestamp.stringValue());
                 }
             }
-            stopWatch.stop();
+            stopWatchPrinted.stop();
 
-            logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+            logger.info("Query evaluated in " + stopWatchEvaluate.getTimeMillis() + " milliseconds.");
+            logger.info("Query printed in " + stopWatchPrinted.getTimeMillis() + " milliseconds.");
         }
     }
 
@@ -212,12 +224,15 @@ public class HalyardHBaseClient implements HBaseClient {
                     "  ?entry <http://nesfit.github.io/ontology/ta.owl#sourceTimeline> ?timeline . " +
                     "} GROUP BY ?label";
 
-            StopWatch stopWatch = new StopWatch();
+            StopWatch stopWatchPrinted = new StopWatch();
+            StopWatch stopWatchEvaluate = new StopWatch();
 
             TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
 
-            stopWatch.start();
+            stopWatchPrinted.start();
+            stopWatchEvaluate.start();
             try (TupleQueryResult result = tupleQuery.evaluate()) {
+                stopWatchEvaluate.stop();
                 while (result.hasNext()) {
                     BindingSet bindingSet = result.next();
                     Value label = bindingSet.getValue("label");
@@ -226,9 +241,10 @@ public class HalyardHBaseClient implements HBaseClient {
                     System.out.println("Timeline label: " + label.stringValue() + " count: " + numberOfEntries.stringValue());
                 }
             }
-            stopWatch.stop();
+            stopWatchPrinted.stop();
 
-            logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+            logger.info("Query evaluated in " + stopWatchEvaluate.getTimeMillis() + " milliseconds.");
+            logger.info("Query printed in " + stopWatchPrinted.getTimeMillis() + " milliseconds.");
         }
     }
 
@@ -243,12 +259,15 @@ public class HalyardHBaseClient implements HBaseClient {
                     "HAVING (?numberOfContents > 1) " +
                     "ORDER BY DESC(?numberOfContents) ";
 
-            StopWatch stopWatch = new StopWatch();
+            StopWatch stopWatchPrinted = new StopWatch();
+            StopWatch stopWatchEvaluate = new StopWatch();
 
             TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
 
-            stopWatch.start();
+            stopWatchPrinted.start();
+            stopWatchEvaluate.start();
             try (TupleQueryResult result = tupleQuery.evaluate()) {
+                stopWatchEvaluate.stop();
                 while (result.hasNext()) {
                     BindingSet bindingSet = result.next();
                     Value sourceUrl = bindingSet.getValue("sourceUrl");
@@ -257,9 +276,10 @@ public class HalyardHBaseClient implements HBaseClient {
                     System.out.println("SourceUrl: " + sourceUrl.stringValue() + " count: " + numberOfContents.stringValue());
                 }
             }
-            stopWatch.stop();
+            stopWatchPrinted.stop();
 
-            logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+            logger.info("Query evaluated in " + stopWatchEvaluate.getTimeMillis() + " milliseconds.");
+            logger.info("Query printed in " + stopWatchPrinted.getTimeMillis() + " milliseconds.");
         }
     }
 
