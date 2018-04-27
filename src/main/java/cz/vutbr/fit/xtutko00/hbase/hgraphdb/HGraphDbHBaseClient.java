@@ -4,12 +4,14 @@ import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.tinkerpop.gremlin.structure.util.GraphFactory;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import cz.vutbr.fit.xtutko00.hbase.HBaseClient;
 import cz.vutbr.fit.xtutko00.hbase.HBaseClientConfig;
 import cz.vutbr.fit.xtutko00.model.rdf.Timeline;
 import cz.vutbr.fit.xtutko00.utils.IdMaker;
 import cz.vutbr.fit.xtutko00.utils.Logger;
+import cz.vutbr.fit.xtutko00.utils.StopWatch;
 import cz.vutbr.fit.xtutko00.utils.XmlResourceParser;
 import io.hgraphdb.HBaseBulkLoader;
 import io.hgraphdb.HBaseGraph;
@@ -55,6 +57,26 @@ public class HGraphDbHBaseClient implements HBaseClient {
 
         logger.info("Creating HBase table " + getTableName());
         ((HBaseGraph) GraphFactory.open(getHBaseConfiguration(true))).close();
+    }
+
+    public void testLongestEntryText() {
+
+    }
+
+    public void testEntryTimestamps() {
+
+    }
+
+    public void testEntryTimestampsWithSort() {
+
+    }
+
+    public void testNumberOfEntries() {
+
+    }
+
+    public void testSharedUrls() {
+
     }
 
     private boolean isConfigOk() {
