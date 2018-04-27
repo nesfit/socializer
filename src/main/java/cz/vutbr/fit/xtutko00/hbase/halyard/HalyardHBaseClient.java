@@ -139,8 +139,8 @@ public class HalyardHBaseClient implements HBaseClient {
             }
             stopWatchPrinted.stop();
 
-            logger.info("Query evaluated in " + stopWatchEvaluate.getTimeSec() + " milliseconds.");
-            logger.info("Query printed in " + stopWatchPrinted.getTimeSec() + " milliseconds.");
+            logger.info("Query evaluated in " + stopWatchEvaluate.getTimeSec() + " seconds.");
+            logger.info("Query printed in " + stopWatchPrinted.getTimeSec() + " seconds.");
         }
     }
 
