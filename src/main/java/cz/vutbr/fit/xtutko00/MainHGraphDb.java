@@ -65,7 +65,7 @@ public class MainHGraphDb {
 
     private static void printHelp() {
         System.out.println("Analyzing graph data with HGraphDB");
-        System.out.println("Usage: $java -cp twitter-timeline-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHGraphDb [table_name] [test_name]");
+        System.out.println("Usage: $java -cp socializer-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHGraphDb [table_name] [test_name]");
         System.out.println("Tests:");
         System.out.println(TEST_LONGEST_TEXT + " - get entry with the longest text");
         System.out.println(TEST_TIMESTAMPS + " - get entries and theirs timestamps");

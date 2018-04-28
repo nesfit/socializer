@@ -111,11 +111,11 @@ Usage:
 
 `repositoryName` - name of the repository you have created (can be viewd via rdf4j workbench)
 ```shell
-$ java -cp twitter-timeline-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHalyard [server_url] [repository_name] [test_name]
+$ java -cp socializer-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHalyard [server_url] [repository_name] [test_name]
 ```
 
 #### HGraphDB
 Usage:
 ```shell
-$ java -cp twitter-timeline-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHGraphDb [table_name_without_suffix] [test_name]
+$ java -cp socializer-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHGraphDb [table_name_without_suffix] [test_name]
 ```

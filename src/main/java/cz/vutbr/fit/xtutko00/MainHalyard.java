@@ -59,7 +59,7 @@ public class MainHalyard {
 
     private static void printHelp() {
         System.out.println("Analyzing graph data with Halyard");
-        System.out.println("Usage: $java -cp twitter-timeline-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHalyard [server_url] [repository_name] [test_name]");
+        System.out.println("Usage: $java -cp socializer-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHalyard [server_url] [repository_name] [test_name]");
         System.out.println("Tests:");
         System.out.println(TEST_LONGEST_TEXT + " - get entry with the longest text");
         System.out.println(TEST_TIMESTAMPS + " - get entries and theirs timestamps");
