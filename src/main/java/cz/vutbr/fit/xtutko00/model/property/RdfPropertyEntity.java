@@ -30,9 +30,9 @@ public abstract class RdfPropertyEntity extends RDFEntity {
     public Vertex addToGraph(HBaseBulkLoader loader, IdMaker idMaker) {
         Vertex vertex = loader.addVertex(getProperties(idMaker));
 
-        getEntities().forEach(entry -> {
-            Vertex entryVertex = entry.addToGraph(loader, idMaker);
-            loader.addEdge(vertex, entryVertex, "has", T.id, idMaker.getId());
+        getEntities().forEach(entity -> {
+            Vertex entityVertex = entity.addToGraph(loader, idMaker);
+            loader.addEdge(vertex, entityVertex, "has", T.id, idMaker.getId());
         });
 
         return vertex;
