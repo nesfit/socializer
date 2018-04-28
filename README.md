@@ -68,7 +68,7 @@ mvn clean compile assembly:single
 Sometimes, there it is not possible to create required tables via `spark-submit` job. 
 If you are not able to create the table (`spark-submit` job freeze on start), use this builder:
 ```$xslt
-java -cp socializer-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.TableBuilder [halyard/hgraphdb] [table_name]
+java -cp socializer-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.TableBuilder [halyard/hgraphdb] [table_name_without_suffix]
 ```
 
 ### Downloading data
@@ -77,11 +77,43 @@ Submit built jar into Spark cluster with `spark-submit`.
 
 Jar params:
 - `-hc, --hbase_client <arg>`    HBase client (halyard or hgraphdb)
-- `-ht, --hbase_tablename <arg>` name of the HBase table
+- `-ht, --hbase_tablename <arg>` name of the HBase table (without suffix)
 - `-s, --sources <arg>`          file with sources, each on new line (line format: T/F:sourceName)
 
 
 Example:
 ```
 $spark-submit --class cz.vutbr.fit.xtutko00.MainSpark socializer-1.0-jar-with-dependencies.jar -s sources.txt -hc halyard -ht test_table
+```
+
+### Analyzing data
+
+Both HGraphDB and Halyard clients has several tests:
+- longestText: get entry with the longest text
+- timestamps: get entries and theirs timestamps
+- timestampsSort: get entries and theirs timestamps and sort newest first
+- numberOfEntries: get timelines labels with number of entries
+- sharedUrls: get number of occurrences of url
+
+#### Halyard
+
+To use Halyard tests you have to have Halyard RDF4J server and workbench distribution
+installed on your cluster (see https://merck.github.io/Halyard/tools.html#rdf4j-web-applications).
+
+Then you have to create RDF4J Halyard HBase store (see https://merck.github.io/Halyard/usage.html#with-rdf4j-workbench) 
+pointing to your HBase table. Don't forget to use `_halyard` suffix.
+
+Usage:
+
+`serverUrl` - url to rdf4j server (f.e. http://localhost:8080/rdf4j-server)
+
+`repositoryName` - name of the repository you have created (can be viewd via rdf4j workbench)
+```shell
+$ java -cp twitter-timeline-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHalyard [server_url] [repository_name] [test_name]
+```
+
+#### HGraphDB
+Usage
+```shell
+$ java -cp twitter-timeline-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHGraphDb [table_name_without_suffix] [test_name]
 ```
