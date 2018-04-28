@@ -1,5 +1,7 @@
 # Socializer
 
+Downloads and analyze social network data, all in Hadoop cluster.
+
 ## Installation
 
 ### Halyard Common dependency
@@ -113,7 +115,7 @@ $ java -cp twitter-timeline-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.
 ```
 
 #### HGraphDB
-Usage
+Usage:
 ```shell
 $ java -cp twitter-timeline-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHGraphDb [table_name_without_suffix] [test_name]
 ```
