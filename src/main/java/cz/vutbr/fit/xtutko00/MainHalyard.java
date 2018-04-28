@@ -12,7 +12,7 @@ public class MainHalyard {
 
     private static final Logger logger = new Logger(MainSpark.class);
 
-    private static final String TEST_LONGEST_NAME = "longestName";
+    private static final String TEST_LONGEST_TEXT = "longestText";
     private static final String TEST_TIMESTAMPS = "timestamps";
     private static final String TEST_TIMESTAMPS_SORT = "timestampsSort";
     private static final String TEST_NUMBER_OF_ENTRIES = "numberOfEntries";
@@ -36,7 +36,7 @@ public class MainHalyard {
 
         logger.info("Running test " + testName);
         switch (testName) {
-            case TEST_LONGEST_NAME:
+            case TEST_LONGEST_TEXT:
                 halyardHBaseClient.testLongestEntryText(serverUrl, repositoryName);
                 break;
             case TEST_TIMESTAMPS:
@@ -61,7 +61,7 @@ public class MainHalyard {
         System.out.println("Analyzing graph data with Halyard");
         System.out.println("Usage: $java -cp twitter-timeline-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHalyard [server_url] [repository_name] [test_name]");
         System.out.println("Tests:");
-        System.out.println(TEST_LONGEST_NAME + " - get entry with the longest text");
+        System.out.println(TEST_LONGEST_TEXT + " - get entry with the longest text");
         System.out.println(TEST_TIMESTAMPS + " - get entries and theirs timestamps");
         System.out.println(TEST_TIMESTAMPS_SORT + " - get entries and theirs timestamps and sort newest first");
         System.out.println(TEST_NUMBER_OF_ENTRIES + " - get timelines labels with number of entries");
