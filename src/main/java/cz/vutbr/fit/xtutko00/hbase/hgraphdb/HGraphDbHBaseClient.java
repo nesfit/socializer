@@ -1,10 +1,21 @@
 package cz.vutbr.fit.xtutko00.hbase.hgraphdb;
 
+import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.in;
+import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.values;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.tinkerpop.gremlin.process.traversal.Order;
+import org.apache.tinkerpop.gremlin.process.traversal.P;
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
+import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.apache.tinkerpop.gremlin.structure.util.GraphFactory;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
+
 
 import cz.vutbr.fit.xtutko00.hbase.HBaseClient;
 import cz.vutbr.fit.xtutko00.hbase.HBaseClientConfig;
@@ -60,23 +71,124 @@ public class HGraphDbHBaseClient implements HBaseClient {
     }
 
     public void testLongestEntryText() {
+        HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
+        GraphTraversalSource g = graph.traversal();
 
+        StopWatch stopWatch = new StopWatch();
+
+        stopWatch.start();
+        GraphTraversal<Vertex, Map<String, Object>> result = g.V()
+                .hasLabel("http://nesfit.github.io/ontology/ta.owl#TextContent")
+                .filter(in("has").hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry"))
+                .order().by(v -> ((Vertex)v).<String>property("text").value().length(), Order.decr)
+                .limit(1)
+                .project("text", "sourceId")
+                .by(values("text"))
+                .by(in("has").values("sourceId"));
+
+        while(result.hasNext()) {
+            Map<String, Object> map = result.next();
+            System.out.println("sourceId: " + map.get("sourceId"));
+            System.out.println("textlen: " + ((String)map.get("text")).length());
+        }
+        stopWatch.stop();
+        logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
     }
 
     public void testEntryTimestamps() {
+        HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
+        GraphTraversalSource g = graph.traversal();
 
+        StopWatch stopWatch = new StopWatch();
+
+        stopWatch.start();
+        Date year2018 = new GregorianCalendar(2018, Calendar.JANUARY, 1).getTime();
+        GraphTraversal<Vertex, Map<String, Object>> result = g.V()
+                .hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry")
+                .filter(in("has"))
+                .has("timestamp", P.gt(year2018))
+                .project("sourceId", "timestamp", "label")
+                .by(values("sourceId"))
+                .by(values("timestamp"))
+                .by(in("has").values("label"));
+
+        while(result.hasNext()) {
+            Map<String, Object> map = result.next();
+            System.out.println("Timeline label: " + map.get("label") + " Entry sourceId: " + map.get("sourceId") + " timestamp: " + map.get("timestamp"));
+        }
+        stopWatch.stop();
+        logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
     }
 
     public void testEntryTimestampsWithSort() {
+        HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
+        GraphTraversalSource g = graph.traversal();
 
+        StopWatch stopWatch = new StopWatch();
+
+        stopWatch.start();
+        Date year2018 = new GregorianCalendar(2018, Calendar.JANUARY, 1).getTime();
+        GraphTraversal<Vertex, Map<String, Object>> result = g.V()
+                .hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry")
+                .filter(in("has"))
+                .has("timestamp", P.gt(year2018))
+                .order()
+                .by(values("timestamp"), Order.decr)
+                .project("sourceId", "timestamp", "label")
+                .by(values("sourceId"))
+                .by(values("timestamp"))
+                .by(in("has").values("label"));
+
+        while(result.hasNext()) {
+            Map<String, Object> map = result.next();
+            System.out.println("Timeline label: " + map.get("label") + " Entry sourceId: " + map.get("sourceId") + " timestamp: " + map.get("timestamp"));
+        }
+        stopWatch.stop();
+        logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
     }
 
     public void testNumberOfEntries() {
+        HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
+        GraphTraversalSource g = graph.traversal();
 
+        StopWatch stopWatch = new StopWatch();
+
+        stopWatch.start();
+        GraphTraversal<Vertex, Map<Object, Long>> result = g.V()
+                .hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry")
+                .filter(in("has"))
+                .groupCount()
+                .by(in("has").values("label"));
+
+        while(result.hasNext()) {
+            Map<Object, Long> map = result.next();
+            Map.Entry<Object,Long> entry = map.entrySet().iterator().next();
+            System.out.println("Timeline label: " + entry.getKey() + " count: " + entry.getValue());
+        }
+        stopWatch.stop();
+        logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
     }
 
     public void testSharedUrls() {
+        HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
+        GraphTraversalSource g = graph.traversal();
 
+        StopWatch stopWatch = new StopWatch();
+
+        stopWatch.start();
+        GraphTraversal<Vertex, Object> result = g.V()
+                .hasLabel("http://nesfit.github.io/ontology/ta.owl#URLContent")
+                .groupCount().by(values("sourceUrl").as("count"))
+                .unfold()
+                .filter(entry -> ((Map.Entry<Object, Long>) entry.get()).getValue() > 1)
+                .order().by(entry -> ((Map.Entry<Object, Long>) entry).getValue(), Order.decr);
+
+        while(result.hasNext()) {
+            Map.Entry<Object, Long> entry = (Map.Entry<Object, Long>) result.next();
+            System.out.println("SourceUrl: " + entry.getKey() + " count: " + entry.getValue());
+        }
+        stopWatch.stop();
+        logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
     }
 
     private boolean isConfigOk() {
