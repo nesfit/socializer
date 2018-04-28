@@ -13,9 +13,11 @@ import cz.vutbr.fit.xtutko00.model.rdf.vocabulary.TA;
 import cz.vutbr.fit.xtutko00.utils.IdMaker;
 
 /**
- * Text contained in an entry..
- * <p>
- * IRI: {@code <http://nesfit.github.io/ontology/ta.owl#TextContent>}
+ * TextContent.
+ *
+ * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+ *
+ * @author xtutko00
  */
 public class TextContent extends Content
 {
@@ -44,12 +46,20 @@ public class TextContent extends Content
 		this.text = text;
 	}
 
+	/**
+	 * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+	 *
+	 * @author burgetr
+	 */
 	@Override
 	public void addToModel(Model model) {
 		super.addToModel(model);
 		addValue(model, TA.text, text);
 	}
 
+	/**
+	 * Returns TextContent properties.
+	 */
 	@Override
 	protected Object[] getProperties(IdMaker idMaker) {
 		List<Object> properties = new ArrayList<>();

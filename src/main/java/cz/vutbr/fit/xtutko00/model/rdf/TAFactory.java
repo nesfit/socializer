@@ -4,6 +4,11 @@ import org.eclipse.rdf4j.model.IRI;
 
 import cz.vutbr.fit.xtutko00.model.core.EntityFactory;
 
+/**
+ * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+ *
+ * @author burgetr
+ */
 public interface TAFactory extends EntityFactory {
 	GeoContent createGeoContent(IRI iri);
 	Content createContent(IRI iri);

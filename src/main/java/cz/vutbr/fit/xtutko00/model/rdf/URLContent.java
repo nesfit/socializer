@@ -13,7 +13,11 @@ import cz.vutbr.fit.xtutko00.model.rdf.vocabulary.TA;
 import cz.vutbr.fit.xtutko00.utils.IdMaker;
 
 /**
- * IRI: {@code <http://nesfit.github.io/ontology/ta.owl#URLContent>}
+ * UrlContent.
+ *
+ * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+ *
+ * @author xtutko00
  */
 public class URLContent extends Content
 {
@@ -57,6 +61,11 @@ public class URLContent extends Content
 		this.sourceUrl = sourceUrl;
 	}
 
+	/**
+	 * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+	 *
+	 * @author burgetr
+	 */
 	@Override
 	public void addToModel(Model model) {
 		super.addToModel(model);
@@ -64,6 +73,9 @@ public class URLContent extends Content
 		addValue(model, TA.sourceUrl, sourceUrl);
 	}
 
+	/**
+	 * Returns UrlContent properties.
+	 */
 	@Override
 	protected Object[] getProperties(IdMaker idMaker) {
 		List<Object> properties = new ArrayList<>();

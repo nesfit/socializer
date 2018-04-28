@@ -2,6 +2,11 @@ package cz.vutbr.fit.xtutko00.hbase;
 
 import java.io.Serializable;
 
+/**
+ * Configuration of HBase client.
+ *
+ * @author xtutko00
+ */
 public class HBaseClientConfig implements Serializable {
 
     private String tableName;

@@ -18,9 +18,11 @@ import cz.vutbr.fit.xtutko00.utils.IdMaker;
 import io.hgraphdb.HBaseBulkLoader;
 
 /**
- * An entry in the timeline.
- * <p>
- * IRI: {@code <http://nesfit.github.io/ontology/ta.owl#Entry>}
+ * Entry.
+ *
+ * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+ *
+ * @author xtutko00
  */
 public class Entry extends RdfPropertyEntity
 {
@@ -89,6 +91,11 @@ public class Entry extends RdfPropertyEntity
 		this.timestamp = timestamp;
 	}
 
+	/**
+	 * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+	 *
+	 * @author burgetr
+	 */
 	@Override
 	public void addToModel(Model model) {
 		super.addToModel(model);
@@ -98,6 +105,9 @@ public class Entry extends RdfPropertyEntity
 		addValue(model, TA.timestamp, timestamp);
 	}
 
+	/**
+	 * Returns Entry properties.
+	 */
 	@Override
 	protected Object[] getProperties(IdMaker idMaker) {
 		List<Object> properties = new ArrayList<>();
@@ -122,6 +132,9 @@ public class Entry extends RdfPropertyEntity
 		return properties.toArray();
 	}
 
+	/**
+	 * Returns Entry content.
+	 */
 	@Override
 	protected Set<RdfPropertyEntity> getEntities() {
 		return Collections.unmodifiableSet(getContains());

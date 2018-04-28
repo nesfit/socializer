@@ -31,7 +31,7 @@ public class SparkRunner implements Serializable {
     }
 
     /**
-     * Downloads timelines from sources on Spark cluster
+     * Downloads timelines from sources on Spark cluster and saves them into HBase table.
      */
     public void downloadTimelines() {
         if (!isConfigurationOk()) {
@@ -84,6 +84,10 @@ public class SparkRunner implements Serializable {
         logger.info("END: Running spark job.");
     }
 
+    /**
+     * Compares HBase clients writing speeds. Firstly all required timelines are downloaded from source, then
+     * these timelines are saved once with Halyard and then with HGraphDB framework.
+     */
     public void compareHBaseClients() {
         if (!isConfigurationOk()) {
             logger.error("Wrong configuration.");
@@ -108,6 +112,7 @@ public class SparkRunner implements Serializable {
 
         logger.info("START: Downloading timelines.");
 
+        // Downloading Timelines
         JavaRDD<Timeline> timelinesRDD = sourcesRDD.map(source -> {
 
             logger.info("START: Processing source: " + source.getType() + ":" + source.getName());
@@ -134,6 +139,7 @@ public class SparkRunner implements Serializable {
         logger.info("END: Downloading timelines. Number of timelines: " + timelinesRDD.count());
 
         logger.info("Start: Collecting timelines.");
+        // Timelines have to be collected because we need to clear time of writing into DB
         List<Timeline> timelines = timelinesRDD.collect();
         logger.info("End: Collecting timelines. Num of timelines " + timelines.size());
 
@@ -141,6 +147,7 @@ public class SparkRunner implements Serializable {
 
         logger.info("START: Saving timelines with Halyard.");
 
+        // Saving timelines with Halyard
         timelinesToSaveRDD.foreach(timeline -> {
             if (timeline == null) {
                 logger.warning("Received null timeline, probably some timeline could not be downloaded.");
@@ -162,6 +169,7 @@ public class SparkRunner implements Serializable {
 
         logger.info("START: Saving timelines with HGraphDB.");
 
+        // Saving timelines with HGraphDB
         timelinesToSaveRDD.foreach(timeline -> {
             if (timeline == null) {
                 logger.warning("Received null timeline, probably some timeline could not be downloaded.");

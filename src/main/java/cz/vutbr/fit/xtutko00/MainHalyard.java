@@ -3,6 +3,11 @@ package cz.vutbr.fit.xtutko00;
 import cz.vutbr.fit.xtutko00.hbase.halyard.HalyardHBaseClient;
 import cz.vutbr.fit.xtutko00.utils.Logger;
 
+/**
+ * Analyzes data with HGraphDB.
+ *
+ * @author xtutko00
+ */
 public class MainHalyard {
 
     private static final Logger logger = new Logger(MainSpark.class);
@@ -13,6 +18,9 @@ public class MainHalyard {
     private static final String TEST_NUMBER_OF_ENTRIES = "numberOfEntries";
     private static final String TEST_SHARED_URLS = "sharedUrls";
 
+    /**
+     * Main method.
+     */
     public static void main(String[] args) {
         if (args.length < 3) {
             logger.error("Wrong arguments.");

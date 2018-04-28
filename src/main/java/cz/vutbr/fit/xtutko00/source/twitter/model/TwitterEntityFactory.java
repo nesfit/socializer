@@ -10,7 +10,8 @@ import cz.vutbr.fit.xtutko00.model.rdf.*;
 import org.eclipse.rdf4j.model.IRI;
 
 /**
- * 
+ * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+ *
  * @author burgetr
  */
 public class TwitterEntityFactory implements TAFactory

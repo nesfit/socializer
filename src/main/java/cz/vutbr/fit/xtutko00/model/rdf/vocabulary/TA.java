@@ -5,13 +5,9 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 /**
- * Timeline Analyzer Ontology.
- * <p>
- * An ontology used for representing the social network timelines and
- * their contents..
- * <p>
- * Namespace TA.
- * Prefix: {@code <http://nesfit.github.io/ontology/ta.owl#>}
+ * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+ *
+ * @author burgetr
  */
 public class TA {
 

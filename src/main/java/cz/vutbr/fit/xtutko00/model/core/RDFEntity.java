@@ -20,7 +20,7 @@ import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 /**
- * A base class for all generated RDF entities.
+ * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
  *
  * @author burgetr
  */

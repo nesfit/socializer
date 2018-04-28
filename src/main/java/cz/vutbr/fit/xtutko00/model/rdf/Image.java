@@ -12,9 +12,11 @@ import cz.vutbr.fit.xtutko00.model.rdf.vocabulary.TA;
 import cz.vutbr.fit.xtutko00.utils.IdMaker;
 
 /**
- * An image contained in an entry..
- * <p>
- * IRI: {@code <http://nesfit.github.io/ontology/ta.owl#Image>}
+ * ImageContent.
+ *
+ * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+ *
+ * @author xtutko00
  */
 public class Image extends Content
 {
@@ -45,12 +47,20 @@ public class Image extends Content
 		this.sourceUrl = sourceUrl;
 	}
 
+	/**
+	 * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+	 *
+	 * @author burgetr
+	 */
 	@Override
 	public void addToModel(Model model) {
 		super.addToModel(model);
 		addValue(model, TA.sourceUrl, sourceUrl);
 	}
 
+	/**
+	 * Returns Image properties.
+	 */
 	@Override
 	protected Object[] getProperties(IdMaker idMaker) {
 		List<Object> properties = new ArrayList<>();

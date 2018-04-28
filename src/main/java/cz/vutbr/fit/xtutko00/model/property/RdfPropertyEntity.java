@@ -11,6 +11,11 @@ import cz.vutbr.fit.xtutko00.model.core.RDFEntity;
 import cz.vutbr.fit.xtutko00.utils.IdMaker;
 import io.hgraphdb.HBaseBulkLoader;
 
+/**
+ * Wrapper for RDF entity so it can be saved into Property Graph Model.
+ *
+ * @author xtutko00
+ */
 public abstract class RdfPropertyEntity extends RDFEntity {
 
     public RdfPropertyEntity(IRI iri) {
@@ -19,6 +24,9 @@ public abstract class RdfPropertyEntity extends RDFEntity {
 
     protected abstract Object[] getProperties(IdMaker idMaker);
 
+    /**
+     * Insert entity into graph.
+     */
     public Vertex addToGraph(HBaseBulkLoader loader, IdMaker idMaker) {
         Vertex vertex = loader.addVertex(getProperties(idMaker));
 

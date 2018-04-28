@@ -6,6 +6,7 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 
 /**
+ * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
  *
  * @author burgetr
  */

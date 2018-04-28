@@ -17,6 +17,11 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import java.io.Serializable;
 
+/**
+ * Creates source clients.
+ *
+ * @author xtutko00
+ */
 public class SourceClientFactory implements Serializable {
 
     private final Logger logger = new cz.vutbr.fit.xtutko00.utils.Logger(SourceClientFactory.class);

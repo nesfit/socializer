@@ -28,6 +28,11 @@ import io.hgraphdb.HBaseBulkLoader;
 import io.hgraphdb.HBaseGraph;
 import io.hgraphdb.HBaseGraphConfiguration;
 
+/**
+ * HGraphDb client.
+ *
+ * @author xtutko00
+ */
 public class HGraphDbHBaseClient implements HBaseClient {
 
     private final Logger logger = new Logger(HGraphDbHBaseClient.class);
@@ -38,6 +43,9 @@ public class HGraphDbHBaseClient implements HBaseClient {
         this.config = config;
     }
 
+    /**
+     * Saves given timeline into HBase table.
+     */
     @Override
     public void saveTimeline(Timeline timeline) {
         logger.info("START: Saving timeline of " + timeline.getSourceId());
@@ -49,7 +57,7 @@ public class HGraphDbHBaseClient implements HBaseClient {
 
         logger.info("Opening HBaseGraph session.");
         HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
-        HBaseBulkLoader loader = new HBaseBulkLoader(graph);
+        HBaseBulkLoader loader = new HBaseBulkLoader(graph); // bulk loader speeds up writing
         IdMaker idMaker = new IdMaker(timeline.getLabel());
 
         timeline.addToGraph(loader, idMaker);
@@ -60,6 +68,9 @@ public class HGraphDbHBaseClient implements HBaseClient {
         logger.info("END: Saving timeline of " + timeline.getSourceId());
     }
 
+    /**
+     * Creates required HBase tables with "_hgraphdb" suffix.
+     */
     public void createTable() {
         if (!isConfigOk()) {
             logger.error("Cannot create table. Wrong configuration.");
@@ -70,6 +81,9 @@ public class HGraphDbHBaseClient implements HBaseClient {
         ((HBaseGraph) GraphFactory.open(getHBaseConfiguration(true))).close();
     }
 
+    /**
+     * Prints entry with the longest text content.
+     */
     public void testLongestEntryText() {
         HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
         GraphTraversalSource g = graph.traversal();
@@ -95,6 +109,9 @@ public class HGraphDbHBaseClient implements HBaseClient {
         logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
     }
 
+    /**
+     * Prints entries newer than year 2018.
+     */
     public void testEntryTimestamps() {
         HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
         GraphTraversalSource g = graph.traversal();
@@ -120,6 +137,9 @@ public class HGraphDbHBaseClient implements HBaseClient {
         logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
     }
 
+    /**
+     * Prints entries newer than year 2018, sorted by creation time.
+     */
     public void testEntryTimestampsWithSort() {
         HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
         GraphTraversalSource g = graph.traversal();
@@ -147,6 +167,9 @@ public class HGraphDbHBaseClient implements HBaseClient {
         logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
     }
 
+    /**
+     * Prints timelines with theirs number of entries.
+     */
     public void testNumberOfEntries() {
         HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
         GraphTraversalSource g = graph.traversal();
@@ -169,6 +192,9 @@ public class HGraphDbHBaseClient implements HBaseClient {
         logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
     }
 
+    /**
+     * Prints number of occurrences of urls in posts, sorted by number of occurrences.
+     */
     public void testSharedUrls() {
         HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
         GraphTraversalSource g = graph.traversal();
@@ -191,6 +217,11 @@ public class HGraphDbHBaseClient implements HBaseClient {
         logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
     }
 
+    /**
+     * Checks configuration.
+     *
+     * @return true if configuration is ok
+     */
     private boolean isConfigOk() {
         if (this.config == null) {
             return false;
@@ -207,6 +238,9 @@ public class HGraphDbHBaseClient implements HBaseClient {
         return true;
     }
 
+    /**
+     * Creates HGraphDB configuration, based on table name and HBase config.
+     */
     private Configuration getHBaseConfiguration(boolean createTable) {
         HBaseGraphConfiguration cfg = new HBaseGraphConfiguration()
                 .setInstanceType(HBaseGraphConfiguration.InstanceType.DISTRIBUTED)
@@ -220,6 +254,9 @@ public class HGraphDbHBaseClient implements HBaseClient {
         return cfg;
     }
 
+    /**
+     * Adds "_hgraphdb" suffix to table name.
+     */
     private String getTableName() {
         return config.getTableName() + "_hgraphdb";
     }

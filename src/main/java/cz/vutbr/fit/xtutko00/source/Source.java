@@ -2,6 +2,11 @@ package cz.vutbr.fit.xtutko00.source;
 
 import java.io.Serializable;
 
+/**
+ * Representation of social network source reference.
+ *
+ * @author xtutko00
+ */
 public class Source implements Serializable {
 
     private ESourceType type;

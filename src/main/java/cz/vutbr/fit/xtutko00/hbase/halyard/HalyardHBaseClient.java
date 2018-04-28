@@ -30,6 +30,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Halyard client.
+ *
+ * @author xtutko00
+ */
 public class HalyardHBaseClient implements HBaseClient {
 
     private final Logger logger = new Logger(HalyardHBaseClient.class);
@@ -44,6 +49,9 @@ public class HalyardHBaseClient implements HBaseClient {
         this.config = config;
     }
 
+    /**
+     * Saves given timeline into HBase table.
+     */
     @Override
     public void saveTimeline(Timeline timeline) {
         logger.info("START: Saving timeline of " + timeline.getSourceId());
@@ -88,6 +96,9 @@ public class HalyardHBaseClient implements HBaseClient {
         logger.info("END: Saving timeline of " + timeline.getSourceId());
     }
 
+    /**
+     * Creates required HBase tables with "_halyard" suffix.
+     */
     @Override
     public void createTable() {
         if (!isConfigOk()) {
@@ -105,6 +116,9 @@ public class HalyardHBaseClient implements HBaseClient {
         }
     }
 
+    /**
+     * Prints entry with the longest text content.
+     */
     public void testLongestEntryText(String serverUrl, String repositoryName) {
         try (RepositoryConnection con = createDbConnection(serverUrl, repositoryName)) {
             String queryString = "select distinct ?entry ?sourceId ?textlen where { " +
@@ -144,6 +158,9 @@ public class HalyardHBaseClient implements HBaseClient {
         }
     }
 
+    /**
+     * Prints entries newer than year 2018.
+     */
     public void testEntryTimestamps(String serverUrl, String repositoryName) {
         try (RepositoryConnection con = createDbConnection(serverUrl, repositoryName)) {
             String queryString = "SELECT ?label ?sourceId ?timestamp " +
@@ -180,6 +197,9 @@ public class HalyardHBaseClient implements HBaseClient {
         }
     }
 
+    /**
+     * Prints entries newer than year 2018, sorted by creation time.
+     */
     public void testEntryTimestampsWithSort(String serverUrl, String repositoryName) {
         try (RepositoryConnection con = createDbConnection(serverUrl, repositoryName)) {
             String queryString = "SELECT ?label ?sourceId ?timestamp " +
@@ -216,6 +236,9 @@ public class HalyardHBaseClient implements HBaseClient {
         }
     }
 
+    /**
+     * Prints timelines with theirs number of entries.
+     */
     public void testNumberOfEntries(String serverUrl, String repositoryName) {
         try (RepositoryConnection con = createDbConnection(serverUrl, repositoryName)) {
             String queryString = "SELECT ?label (COUNT(?entry) as ?numberOfEntries) " +
@@ -248,6 +271,9 @@ public class HalyardHBaseClient implements HBaseClient {
         }
     }
 
+    /**
+     * Prints number of occurrences of urls in posts, sorted by number of occurrences.
+     */
     public void testSharedUrls(String serverUrl, String repositoryName) {
         try (RepositoryConnection con = createDbConnection(serverUrl, repositoryName)) {
             String queryString = "SELECT ?sourceUrl (COUNT(?content) as ?numberOfContents) " +
@@ -283,18 +309,27 @@ public class HalyardHBaseClient implements HBaseClient {
         }
     }
 
+    /**
+     * Connects to RDF4J repository.
+     */
     private RepositoryConnection createDbConnection(String serverUrl, String repositoryName) {
         Repository repo = new HTTPRepository(serverUrl, repositoryName);
         repo.initialize();
         return repo.getConnection();
     }
 
+    /**
+     * Parse Timeline into set of RDF triples.
+     */
     private Set<Statement> getStatements(Timeline timeline) {
         Model model = new LinkedHashModel();
         timeline.addToModel(model);
         return model;
     }
 
+    /**
+     * Parse collection of RDF triples into collection of KeyValues.
+     */
     private Set<KeyValue> getKeyValues(Set<Statement> statements) {
         long timestamp = System.currentTimeMillis();
 
@@ -317,6 +352,11 @@ public class HalyardHBaseClient implements HBaseClient {
         return keyValues;
     }
 
+    /**
+     * Checks configuration.
+     *
+     * @return true if configuration is ok
+     */
     private boolean isConfigOk() {
         if (this.config == null) {
             return false;
@@ -333,6 +373,9 @@ public class HalyardHBaseClient implements HBaseClient {
         return true;
     }
 
+    /**
+     * Adds "_halyard" suffix to table name.
+     */
     private String getTableName() {
         return config.getTableName() + "_halyard";
     }

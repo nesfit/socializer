@@ -5,7 +5,9 @@ import cz.vutbr.fit.xtutko00.hbase.hgraphdb.HGraphDbHBaseClient;
 import cz.vutbr.fit.xtutko00.utils.Logger;
 
 /**
- * Created by jakubmac on 27/04/2018.
+ * Analyzes data with HGraphDB.
+ *
+ * @author xtutko00
  */
 public class MainHGraphDb {
 
@@ -19,6 +21,9 @@ public class MainHGraphDb {
 
     private static final String HBASE_SITE_FILENAME = "/hbase-site.xml";
 
+    /**
+     * Main method.
+     */
     public static void main(String[] args) {
         if (args.length < 2) {
             logger.error("Wrong arguments.");

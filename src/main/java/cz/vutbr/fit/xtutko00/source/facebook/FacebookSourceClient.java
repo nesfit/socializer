@@ -19,6 +19,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Client for Facebook social network.
+ *
+ * Some of the methods reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+ *
+ * @author xtutko00
+ */
 public class FacebookSourceClient implements SourceClient {
 
     private final Logger logger = new cz.vutbr.fit.xtutko00.utils.Logger(FacebookSourceClient.class);
@@ -47,6 +54,11 @@ public class FacebookSourceClient implements SourceClient {
         }
     }
 
+    /**
+     * Downloads timeline of given Facebook page.
+     *
+     * @param pageName text id of FB page
+     */
     @Override
     public Timeline getTimeline(String pageName) {
         if (facebook == null) {
@@ -71,6 +83,9 @@ public class FacebookSourceClient implements SourceClient {
         }
     }
 
+    /**
+     * Downloads page posts.
+     */
     private List<Post> loadFeed(String pageName, FacebookClient facebook) {
 
         String dest = pageName + "/feed";
@@ -84,6 +99,7 @@ public class FacebookSourceClient implements SourceClient {
         Parameter[] params = new Parameter[plist.size()];
         params = plist.toArray(params);
 
+        // Accessing first page
         ConnectionIterator<Post> feedItr = null;
         while(feedItr == null) {
             try {
@@ -97,6 +113,7 @@ public class FacebookSourceClient implements SourceClient {
             }
         }
 
+        // Accessing the rest of the posts
         List<Post> feeds = new ArrayList<>();
         while(feedItr.hasNext()) {
             try {
@@ -114,6 +131,13 @@ public class FacebookSourceClient implements SourceClient {
         return feeds;
     }
 
+    /**
+     * Converts posts into Timeline.
+     *
+     * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+     *
+     * @author burgetr
+     */
     private Timeline createTimeline(String pageName, List<Post> feed) {
 
         final FBEntityFactory ef = FBEntityFactory.getInstance();
@@ -131,7 +155,11 @@ public class FacebookSourceClient implements SourceClient {
     }
 
     /**
-     * @author burget
+     * Converts post into Entry.
+     *
+     * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+     *
+     * @author burgetr
      */
     private Entry createEntry(FBEntityFactory ef, Post post)
     {
@@ -207,7 +235,11 @@ public class FacebookSourceClient implements SourceClient {
     }
 
     /**
-     * @author burget
+     * Converts post's image into Image.
+     *
+     * Reused from <a href="https://github.com/nesfit/timeline-analyzer">timeline-analyzer</a>
+     *
+     * @author burgetr
      */
     private Image createImageFromAttachment(FBEntityFactory ef, StoryAttachment.Image img, String postId, int imgCnt)
     {
@@ -216,6 +248,9 @@ public class FacebookSourceClient implements SourceClient {
         return ret;
     }
 
+    /**
+     * Handling exceeded rate limit.
+     */
     private void handleRateLimitExceeded() {
         logger.warning("Facebook rate limit exceeded. Sleeping for " + RATE_LIMIT_SLEEP_INTERVAL + " milliseconds.");
         try {

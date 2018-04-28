@@ -7,6 +7,11 @@ import cz.vutbr.fit.xtutko00.hbase.halyard.HalyardHBaseClient;
 import cz.vutbr.fit.xtutko00.hbase.hgraphdb.HGraphDbHBaseClient;
 import cz.vutbr.fit.xtutko00.utils.Logger;
 
+/**
+ * Utility for creating HBase tables.
+ *
+ * @author xtutko00
+ */
 public class TableBuilder {
 
     private static final Logger logger = new Logger(MainSpark.class);

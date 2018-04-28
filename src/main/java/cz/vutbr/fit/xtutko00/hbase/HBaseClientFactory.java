@@ -5,6 +5,11 @@ import cz.vutbr.fit.xtutko00.hbase.hgraphdb.HGraphDbHBaseClient;
 
 import java.io.Serializable;
 
+/**
+ * Creates HBase clients.
+ *
+ * @author xtutko00
+ */
 public class HBaseClientFactory implements Serializable {
 
     private EClient client;
