@@ -88,9 +88,11 @@ public class HGraphDbHBaseClient implements HBaseClient {
         HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
         GraphTraversalSource g = graph.traversal();
 
-        StopWatch stopWatch = new StopWatch();
+        StopWatch stopWatchPrinted = new StopWatch();
+        StopWatch stopWatchEvaluate = new StopWatch();
 
-        stopWatch.start();
+        stopWatchPrinted.start();
+        stopWatchEvaluate.start();
         GraphTraversal<Vertex, Map<String, Object>> result = g.V()
                 .hasLabel("http://nesfit.github.io/ontology/ta.owl#TextContent")
                 .filter(in("has").hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry"))
@@ -102,11 +104,14 @@ public class HGraphDbHBaseClient implements HBaseClient {
 
         while(result.hasNext()) {
             Map<String, Object> map = result.next();
+            stopWatchEvaluate.stop();
             System.out.println("sourceId: " + map.get("sourceId"));
             System.out.println("textlen: " + ((String)map.get("text")).length());
         }
-        stopWatch.stop();
-        logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        stopWatchPrinted.stop();
+        logger.info("Query evaluated in " + stopWatchEvaluate.getTimeMillis() + " milliseconds.");
+        logger.info("Query printed in " + stopWatchPrinted.getTimeMillis() + " milliseconds.");
+
         graph.close();
     }
 
@@ -117,9 +122,11 @@ public class HGraphDbHBaseClient implements HBaseClient {
         HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
         GraphTraversalSource g = graph.traversal();
 
-        StopWatch stopWatch = new StopWatch();
+        StopWatch stopWatchPrinted = new StopWatch();
+        StopWatch stopWatchEvaluate = new StopWatch();
 
-        stopWatch.start();
+        stopWatchPrinted.start();
+        stopWatchEvaluate.start();
         Date year2018 = new GregorianCalendar(2018, Calendar.JANUARY, 1).getTime();
         GraphTraversal<Vertex, Map<String, Object>> result = g.V()
                 .hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry")
@@ -132,10 +139,13 @@ public class HGraphDbHBaseClient implements HBaseClient {
 
         while(result.hasNext()) {
             Map<String, Object> map = result.next();
+            stopWatchEvaluate.stop();
             System.out.println("Timeline label: " + map.get("label") + " Entry sourceId: " + map.get("sourceId") + " timestamp: " + map.get("timestamp"));
         }
-        stopWatch.stop();
-        logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        stopWatchPrinted.stop();
+        logger.info("Query evaluated in " + stopWatchEvaluate.getTimeMillis() + " milliseconds.");
+        logger.info("Query printed in " + stopWatchPrinted.getTimeMillis() + " milliseconds.");
+
         graph.close();
     }
 
@@ -146,9 +156,11 @@ public class HGraphDbHBaseClient implements HBaseClient {
         HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
         GraphTraversalSource g = graph.traversal();
 
-        StopWatch stopWatch = new StopWatch();
+        StopWatch stopWatchPrinted = new StopWatch();
+        StopWatch stopWatchEvaluate = new StopWatch();
 
-        stopWatch.start();
+        stopWatchPrinted.start();
+        stopWatchEvaluate.start();
         Date year2018 = new GregorianCalendar(2018, Calendar.JANUARY, 1).getTime();
         GraphTraversal<Vertex, Map<String, Object>> result = g.V()
                 .hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry")
@@ -163,10 +175,13 @@ public class HGraphDbHBaseClient implements HBaseClient {
 
         while(result.hasNext()) {
             Map<String, Object> map = result.next();
+            stopWatchEvaluate.stop();
             System.out.println("Timeline label: " + map.get("label") + " Entry sourceId: " + map.get("sourceId") + " timestamp: " + map.get("timestamp"));
         }
-        stopWatch.stop();
-        logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        stopWatchPrinted.stop();
+        logger.info("Query evaluated in " + stopWatchEvaluate.getTimeMillis() + " milliseconds.");
+        logger.info("Query printed in " + stopWatchPrinted.getTimeMillis() + " milliseconds.");
+
         graph.close();
     }
 
@@ -177,9 +192,11 @@ public class HGraphDbHBaseClient implements HBaseClient {
         HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
         GraphTraversalSource g = graph.traversal();
 
-        StopWatch stopWatch = new StopWatch();
+        StopWatch stopWatchPrinted = new StopWatch();
+        StopWatch stopWatchEvaluate = new StopWatch();
 
-        stopWatch.start();
+        stopWatchPrinted.start();
+        stopWatchEvaluate.start();
         GraphTraversal<Vertex, Map<Object, Long>> result = g.V()
                 .hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry")
                 .filter(in("has"))
@@ -188,11 +205,14 @@ public class HGraphDbHBaseClient implements HBaseClient {
 
         while(result.hasNext()) {
             Map<Object, Long> map = result.next();
+            stopWatchEvaluate.stop();
             Map.Entry<Object,Long> entry = map.entrySet().iterator().next();
             System.out.println("Timeline label: " + entry.getKey() + " count: " + entry.getValue());
         }
-        stopWatch.stop();
-        logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        stopWatchPrinted.stop();
+        logger.info("Query evaluated in " + stopWatchEvaluate.getTimeMillis() + " milliseconds.");
+        logger.info("Query printed in " + stopWatchPrinted.getTimeMillis() + " milliseconds.");
+
         graph.close();
     }
 
@@ -203,9 +223,11 @@ public class HGraphDbHBaseClient implements HBaseClient {
         HBaseGraph graph = (HBaseGraph) GraphFactory.open(getHBaseConfiguration(false));
         GraphTraversalSource g = graph.traversal();
 
-        StopWatch stopWatch = new StopWatch();
+        StopWatch stopWatchPrinted = new StopWatch();
+        StopWatch stopWatchEvaluate = new StopWatch();
 
-        stopWatch.start();
+        stopWatchPrinted.start();
+        stopWatchEvaluate.start();
         GraphTraversal<Vertex, Object> result = g.V()
                 .hasLabel("http://nesfit.github.io/ontology/ta.owl#URLContent")
                 .groupCount().by(values("sourceUrl").as("count"))
@@ -214,11 +236,14 @@ public class HGraphDbHBaseClient implements HBaseClient {
                 .order().by(entry -> ((Map.Entry<Object, Long>) entry).getValue(), Order.decr);
 
         while(result.hasNext()) {
+            stopWatchEvaluate.stop();
             Map.Entry<Object, Long> entry = (Map.Entry<Object, Long>) result.next();
             System.out.println("SourceUrl: " + entry.getKey() + " count: " + entry.getValue());
         }
-        stopWatch.stop();
-        logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        stopWatchPrinted.stop();
+        logger.info("Query evaluated in " + stopWatchEvaluate.getTimeMillis() + " milliseconds.");
+        logger.info("Query printed in " + stopWatchPrinted.getTimeMillis() + " milliseconds.");
+
         graph.close();
     }
 

@@ -10,10 +10,13 @@ public class StopWatch {
 
     public void start() {
         startTime = System.currentTimeMillis();
+        stopTime = 0L;
     }
 
     public void stop() {
-        stopTime = System.currentTimeMillis();
+        if (stopTime == 0L) {
+            stopTime = System.currentTimeMillis();
+        }
     }
 
     public Long getTimeSec() {
