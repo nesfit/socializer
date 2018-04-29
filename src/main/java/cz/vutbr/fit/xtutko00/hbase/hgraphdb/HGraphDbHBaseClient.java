@@ -107,6 +107,7 @@ public class HGraphDbHBaseClient implements HBaseClient {
         }
         stopWatch.stop();
         logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        graph.close();
     }
 
     /**
@@ -135,6 +136,7 @@ public class HGraphDbHBaseClient implements HBaseClient {
         }
         stopWatch.stop();
         logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        graph.close();
     }
 
     /**
@@ -165,6 +167,7 @@ public class HGraphDbHBaseClient implements HBaseClient {
         }
         stopWatch.stop();
         logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        graph.close();
     }
 
     /**
@@ -190,6 +193,7 @@ public class HGraphDbHBaseClient implements HBaseClient {
         }
         stopWatch.stop();
         logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        graph.close();
     }
 
     /**
@@ -215,6 +219,7 @@ public class HGraphDbHBaseClient implements HBaseClient {
         }
         stopWatch.stop();
         logger.info("Query evaluated in " + stopWatch.getTimeMillis() + " milliseconds.");
+        graph.close();
     }
 
     /**
