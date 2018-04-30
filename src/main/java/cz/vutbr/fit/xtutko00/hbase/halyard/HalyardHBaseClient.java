@@ -121,14 +121,15 @@ public class HalyardHBaseClient implements HBaseClient {
      */
     public void testLongestEntryText(String serverUrl, String repositoryName) {
         try (RepositoryConnection con = createDbConnection(serverUrl, repositoryName)) {
-            String queryString = "select distinct ?entry ?sourceId ?textlen where { " +
+            String queryString = "SELECT ?entry ?sourceId ?textlen WHERE { " +
                     "  ?entry <http://nesfit.github.io/ontology/ta.owl#sourceId> ?sourceId . " +
                     "  ?entry <http://nesfit.github.io/ontology/ta.owl#contains> ?content . " +
+                    "  ?content <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://nesfit.github.io/ontology/ta.owl#TextContent> . " +
                     "  ?content <http://nesfit.github.io/ontology/ta.owl#text> ?text .\n" +
                     "  BIND (strlen(?text) AS ?textlen) " +
                     "} " +
-                    "order by desc (strlen(str(?text))) " +
-                    "limit 1";
+                    "ORDER BY DESC (?textlen) " +
+                    "LIMIT 1";
 
             StopWatch stopWatchPrinted = new StopWatch();
             StopWatch stopWatchEvaluate = new StopWatch();
