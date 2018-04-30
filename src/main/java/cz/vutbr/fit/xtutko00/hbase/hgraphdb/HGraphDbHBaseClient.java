@@ -96,7 +96,13 @@ public class HGraphDbHBaseClient implements HBaseClient {
         GraphTraversal<Vertex, Map<String, Object>> result = g.V()
                 .hasLabel("http://nesfit.github.io/ontology/ta.owl#TextContent")
                 .filter(in("has").hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry"))
-                .order().by(v -> ((Vertex)v).<String>property("text").value().length(), Order.decr)
+                .order().by(v -> {
+                    if (((Vertex) v).property("text").isPresent()) {
+                        return ((Vertex) v).<String>property("text").value().length();
+                    } else {
+                        return 0;
+                    }
+                }, Order.decr)
                 .limit(1)
                 .project("text", "sourceId")
                 .by(values("text"))
