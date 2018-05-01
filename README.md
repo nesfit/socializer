@@ -115,6 +115,9 @@ $ java -cp socializer-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHa
 ```
 
 #### HGraphDB
+
+Since HGraphDB is connecting right into HBase database, tests have to be runned on master node of the cluster with configured `hbase-site.xml` file.
+
 Usage:
 ```shell
 $ java -cp socializer-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHGraphDb [table_name_without_suffix] [test_name]

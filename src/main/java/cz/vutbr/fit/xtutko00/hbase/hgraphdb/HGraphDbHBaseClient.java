@@ -95,7 +95,6 @@ public class HGraphDbHBaseClient implements HBaseClient {
         stopWatchEvaluate.start();
         GraphTraversal<Vertex, Map<String, Object>> result = g.V()
                 .hasLabel("http://nesfit.github.io/ontology/ta.owl#TextContent")
-                .filter(in("has").hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry"))
                 .order().by(v -> {
                     if (((Vertex) v).property("text").isPresent()) {
                         return ((Vertex) v).<String>property("text").value().length();
@@ -136,7 +135,6 @@ public class HGraphDbHBaseClient implements HBaseClient {
         Date year2018 = new GregorianCalendar(2018, Calendar.JANUARY, 1).getTime();
         GraphTraversal<Vertex, Map<String, Object>> result = g.V()
                 .hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry")
-                .filter(in("has"))
                 .has("timestamp", P.gt(year2018))
                 .project("sourceId", "timestamp", "label")
                 .by(values("sourceId"))
@@ -170,7 +168,6 @@ public class HGraphDbHBaseClient implements HBaseClient {
         Date year2018 = new GregorianCalendar(2018, Calendar.JANUARY, 1).getTime();
         GraphTraversal<Vertex, Map<String, Object>> result = g.V()
                 .hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry")
-                .filter(in("has"))
                 .has("timestamp", P.gt(year2018))
                 .order()
                 .by(values("timestamp"), Order.decr)
@@ -205,7 +202,6 @@ public class HGraphDbHBaseClient implements HBaseClient {
         stopWatchEvaluate.start();
         GraphTraversal<Vertex, Map<Object, Long>> result = g.V()
                 .hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry")
-                .filter(in("has"))
                 .groupCount()
                 .by(in("has").values("label"));
 
