@@ -1,6 +1,7 @@
 package cz.vutbr.fit.xtutko00.hbase.hgraphdb;
 
 import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.in;
+import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.out;
 import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.values;
 
 import java.util.Calendar;
@@ -200,17 +201,18 @@ public class HGraphDbHBaseClient implements HBaseClient {
 
         stopWatchPrinted.start();
         stopWatchEvaluate.start();
-        GraphTraversal<Vertex, Map<Object, Long>> result = g.V()
-                .hasLabel("http://nesfit.github.io/ontology/ta.owl#Entry")
-                .groupCount()
-                .by(in("has").values("label"));
+        GraphTraversal<Vertex, Map<String, Object>> result = g.V()
+                .hasLabel("http://nesfit.github.io/ontology/ta.owl#Timeline")
+                .project("label", "count")
+                .by(values("label"))
+                .by(out().count());
 
         while(result.hasNext()) {
-            Map<Object, Long> map = result.next();
+            Map<String, Object> map = result.next();
             stopWatchEvaluate.stop();
-            Map.Entry<Object,Long> entry = map.entrySet().iterator().next();
-            System.out.println("Timeline label: " + entry.getKey() + " count: " + entry.getValue());
+            System.out.println("Timeline label: " + map.get("label") + " count: " + map.get("count"));
         }
+
         stopWatchPrinted.stop();
         logger.info("Query evaluated in " + stopWatchEvaluate.getTimeMillis() + " milliseconds.");
         logger.info("Query printed in " + stopWatchPrinted.getTimeMillis() + " milliseconds.");
@@ -232,7 +234,7 @@ public class HGraphDbHBaseClient implements HBaseClient {
         stopWatchEvaluate.start();
         GraphTraversal<Vertex, Object> result = g.V()
                 .hasLabel("http://nesfit.github.io/ontology/ta.owl#URLContent")
-                .groupCount().by(values("sourceUrl").as("count"))
+                .groupCount().by(values("sourceUrl"))
                 .unfold()
                 .filter(entry -> ((Map.Entry<Object, Long>) entry.get()).getValue() > 1)
                 .order().by(entry -> ((Map.Entry<Object, Long>) entry).getValue(), Order.decr);
