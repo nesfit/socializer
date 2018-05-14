@@ -131,7 +131,7 @@ pointing to your HBase table. Don't forget to use `_halyard` suffix.
 
 Usage:
 - `serverUrl` - url to rdf4j server (f.e. http://localhost:8080/rdf4j-server)
-- `repositoryName` - name of the repository you have created (can be viewd via rdf4j workbench)
+- `repositoryName` - name of the repository you have created (can be view via rdf4j workbench)
 ```shell
 $ java -cp socializer-1.0-jar-with-dependencies.jar cz.vutbr.fit.xtutko00.MainHalyard [server_url] [repository_name] [test_name]
 ```
