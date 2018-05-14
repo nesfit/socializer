@@ -116,10 +116,10 @@ $spark-submit --class cz.vutbr.fit.xtutko00.MainSpark socializer-1.0-jar-with-de
 
 Both HGraphDB and Halyard clients have several database queries to analyze data:
 - `longestText`: get entry with the longest text
-- `timestamps`: get entries and theirs timestamps
-- `timestampsSort`: get entries and theirs timestamps and sort newest first
-- `numberOfEntries`: get timelines labels with number of entries
-- `sharedUrls`: get number of occurrences of url
+- `timestamps`: get entries newer than 2018
+- `timestampsSort`: get entries newer than 2018 sorted by time
+- `numberOfEntries`: get timelines with number of entries
+- `sharedUrls`: get urls, which are occurred in the database at least 2 times, sorted by occurrence
 
 #### Halyard
 
