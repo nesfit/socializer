@@ -64,6 +64,7 @@
             <artifactId>hbase-client</artifactId>
             <version>1.1.2</version>
         </dependency>
+        <!-- This must be locally installed, see README -->
         <dependency>
             <groupId>com.msd.gin.halyard.common</groupId>
             <artifactId>halyard-common</artifactId>
