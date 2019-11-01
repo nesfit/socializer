@@ -1,6 +1,6 @@
 # Socializer
 
-Downloads and analyze social network data, all in Hadoop cluster.
+The *Socializer* tool uses a Hadoop/Spark cluster to download and extract events from social networks. It provides a data source for the [Timeline Analyzer](https://github.com/nesfit/timeline-analyzer) as an alternative to the built-in locally running tools.
 
 ## Installation
 
